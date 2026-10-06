@@ -1,0 +1,16 @@
+# ignore everything by default
+*
+# but do not ignore core files
+!src/
+!docs/
+!examples/
+!tests/
+!pyproject.toml
+!uv.lock
+# README is used in pyproject.toml
+!README.md
+# but make sure to ignore cache
+__pycache__/
+*.pyc
+# and also ignore the doc website build
+docs/_build/

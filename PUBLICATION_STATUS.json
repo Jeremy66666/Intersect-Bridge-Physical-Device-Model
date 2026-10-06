@@ -1,0 +1,12 @@
+{
+  "target_account": "Jeremy66666",
+  "visibility": "public",
+  "source_unchanged": true,
+  "vendor_redistribution_permission": "pending",
+  "vendor_files_copied_locally_but_ignored": true,
+  "private_configuration_included": false,
+  "experiment_data_included": false,
+  "hardware_not_started": true,
+  "portability": "Original absolute paths, device serial numbers and Windows toolchain paths are preserved; a fresh computer requires environment setup.",
+  "target_repository": "Jeremy66666/Intersect-Bridge-Physical-Device-Model"
+}

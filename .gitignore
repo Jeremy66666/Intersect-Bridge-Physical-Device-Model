@@ -1,0 +1,28 @@
+# Private configuration and runtime state
+**/config.json
+.env
+.env.*
+!.env.example
+**/.venv/
+**/__pycache__/
+**/runtime/
+**/ipc/
+**/scan_sessions/
+**/scan_analysis/
+**/dark_measurements/
+*.log
+*.pdb
+*.ilk
+*.exe
+*.dll
+*.lib
+**/CMakeFiles/
+**/CMakeCache.txt
+**/CMakeLists.txt.user
+.packaging_local/
+# Vendor files: local copies only, until redistribution permission is confirmed
+/hardware/SampleApl/
+/hardware/DLL/
+/hardware/dlls/
+/physical_device/RamanAutofocus/dlls/
+/physical_device/RamanAutofocus/build/

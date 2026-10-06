@@ -1,0 +1,18 @@
+[
+  {
+    "folder": "third_party/intersect-python-sdk",
+    "archive_sha256": "C1E71A01368AC10EF4983C3116FB7099E124F72159E5708F9E86A8ACA3DFA743",
+    "source_unchanged": true,
+    "commit": "7e7d2e7fa0d6707f56e51d9080c1d7cd389c6a8e",
+    "version": "v0.9.3",
+    "repository": "https://github.com/INTERSECT-SDK/python-sdk"
+  },
+  {
+    "folder": "third_party/intersect-architecture",
+    "archive_sha256": "8AC92FB7EE4115B617C81D0415764E8DC29C9317BBAB4A261FAE819D6E88CB52",
+    "source_unchanged": true,
+    "commit": "1eb37e6610da776645c4058aabbb7511b9766255",
+    "version": "commit snapshot",
+    "repository": "https://github.com/ORNL/intersect-architecture"
+  }
+]

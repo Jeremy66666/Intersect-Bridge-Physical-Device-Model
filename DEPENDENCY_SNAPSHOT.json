@@ -1,0 +1,17 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "installed_versions": {
+    "intersect-sdk": "0.9.3",
+    "numpy": "2.3.5",
+    "scikit-learn": "1.8.0",
+    "scipy": "1.18.1",
+    "joblib": "1.5.3",
+    "pydantic": "2.13.5",
+    "paho-mqtt": "2.1.0",
+    "PySide6-Essentials": "6.11.2",
+    "shiboken6": "6.11.2",
+    "pyinstaller": "6.22.3",
+    "psutil": "7.2.2"
+  },
+  "note": "Existing requirements and source files are copied unchanged. This is a source snapshot, not a portable Python environment."
+}

@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - candidate-*
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+      - candidate-*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Ruff linting, formating, MyPy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          uv sync --locked --all-extras --all-groups
+      - name: Run linters and type checks
+        run: |
+          uv run ruff format --check
+          uv run ruff check
+          uv run mypy src/intersect_sdk/
+
+  # Run unit tests only on Windows/MacOS, we can run the full test suite on Linux
+  test-unit:
+    name: Windows/MacOS unit tests
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        os:
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          uv sync --locked --all-extras --all-groups
+      - name: Run tests
+        run: uv run pytest tests/unit/ --cov=src/intersect_sdk/ --cov-report=html:reports/htmlcov/ --cov-report=xml:reports/coverage_report.xml --junitxml=reports/junit.xml
+
+  # we can only run our full test suite on Ubuntu due to the Github Actions services requirement
+  test-complete:
+    name: Test with coverage
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        os:
+          - ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    services:
+      rabbitmq:
+        image: "bitnamilegacy/rabbitmq:4.1"
+        env:
+          # space-delimited list of plugins
+          RABBITMQ_PLUGINS: "rabbitmq_mqtt"
+          RABBITMQ_USERNAME: "intersect_username"
+          RABBITMQ_PASSWORD: "intersect_password"
+          # misleading env name, this is needed to set "loopback_users.$USERNAME = false"
+          RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS: "yes"
+        ports:
+          - "1883:1883" # MQTT port
+          - "5672:5672" # AMQP port
+      minio:
+        image: "bitnamilegacy/minio:2024.6.4"
+        env:
+          MINIO_ROOT_USER: AKIAIOSFODNN7EXAMPLE
+          MINIO_ROOT_PASSWORD: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+          MINIO_SKIP_CLIENT: "yes"
+        ports:
+          - "9000:9000" # main MINIO API port
+          - "9001:9001" # web UI
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          uv sync --locked --all-extras --all-groups
+      - name: Run tests
+        run: uv run pytest tests/ --cov=src/intersect_sdk/ --cov-report=html:reports/htmlcov/ --cov-report=xml:reports/coverage_report.xml --junitxml=reports/junit.xml

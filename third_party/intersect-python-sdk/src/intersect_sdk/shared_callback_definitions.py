@@ -1,0 +1,89 @@
+"""Callback definitions shared between Services, Capabilities, and Clients."""
+
+from typing import Annotated, Any, TypeAlias
+
+from intersect_sdk_common import (
+    IntersectDataHandler,
+    IntersectMimeType,
+)
+from intersect_sdk_common.constants import CAPABILITY_REGEX, SYSTEM_OF_SYSTEM_REGEX
+from pydantic import BaseModel, ConfigDict, Field
+
+INTERSECT_JSON_VALUE: TypeAlias = (
+    list['INTERSECT_JSON_VALUE']
+    | dict[str, 'INTERSECT_JSON_VALUE']
+    | str
+    | bool
+    | int
+    | float
+    | None
+)
+"""
+This is a simple type representation of JSON as a Python object. INTERSECT will automatically deserialize service payloads into one of these types.
+
+(Pydantic has a similar type, "JsonValue", which should be used if you desire functionality beyond type hinting. This is strictly a type hint.)
+"""
+
+INTERSECT_RESPONSE_VALUE: TypeAlias = INTERSECT_JSON_VALUE | bytes
+"""
+This is the actual response value you will get back from a Service. The type will already be serialized into Python for you,
+but will not be serialized into a precise value.
+
+If you receive 'bytes', you should assume binary data. Other types imply JSON values.
+"""
+
+
+class IntersectDirectMessageParams(BaseModel):
+    """These are the public-facing properties of a message which can be sent to another Service.
+
+    This object can be used by Clients, and by Services if initiating a service-to-service request.
+    """
+
+    destination: Annotated[str, Field(pattern=SYSTEM_OF_SYSTEM_REGEX)]
+    """
+    The destination string. You'll need to know the system-of-system representation of the Service.
+
+    Note that this should match what you would see in the schema.
+    """
+
+    operation: str
+    """
+    The name of the operation you want to call from the Service - this should be represented as it is in the Service's schema.
+    """
+
+    payload: Any
+    """
+    The raw Python object you want to have serialized as the payload.
+
+    If you want to just use the service's default value for a request (assuming it has a default value for a request), you may set this as None.
+    """
+
+    content_type: IntersectMimeType = 'application/json'
+    """
+    The IntersectMimeType of your message. You'll want this to match with the ContentType of the function from the schema.
+
+    default: application/json
+    """
+
+    data_handler: IntersectDataHandler = IntersectDataHandler.MESSAGE
+    """
+    The IntersectDataHandler you want to use (most people can just use IntersectDataHandler.MESSAGE here, unless your data is very large)
+
+    default: IntersectDataHandler.MESSAGE
+    """
+
+    # pydantic config
+    model_config = ConfigDict(revalidate_instances='always')
+
+
+class IntersectEventMessageParams(BaseModel):
+    """Public facing properties of events the Client/Service wants to listen to."""
+
+    hierarchy: Annotated[str, Field(pattern=SYSTEM_OF_SYSTEM_REGEX)]
+    """The full hierarchy (org.facility.system.subsystem.service) that we want to listen to."""
+
+    capability_name: Annotated[str, Field(pattern=CAPABILITY_REGEX)]
+    """Name of the capability you want to listen to events from"""
+
+    event_name: str
+    """Name of the event the capability emits that you're listening for"""

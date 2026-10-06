@@ -1,0 +1,1282 @@
+"""Persistent, registered entities into INTERSECT are Services. If you're looking to create your own orchestrator or utilize a temporary script, please see the intersect_sdk.client module.
+
+The Service is at the heart of a client-developed SDK. It works off of a user-defined capability (which can extend from many capabilities),
+and automatically integrates the user-defined capability into INTERSECT's message and schema-based
+ecosystem.
+
+Users do not need to interact with the service other than through its constructor and the lifecycle
+"start" and "stop" methods.
+
+The service will automatically handle all system-level interfaces (i.e. status broadcasts).
+User-level interfaces are all handled on the same messaging channel, so users should not need to configure
+message brokers or the data layer beyond defining credentials in their "IntersectConfig" class.
+
+Most useful definitions and typings will be found in the service_definitions module.
+"""
+
+import time
+from collections import defaultdict
+from threading import Lock
+from types import MappingProxyType
+from typing import Any, Literal
+from uuid import UUID, uuid1, uuid3, uuid4
+
+from intersect_sdk_common import (
+    ControlPlaneManager,
+    DataPlaneManager,
+    HierarchyConfig,
+    IntersectApplicationError,
+    IntersectDataHandler,
+    IntersectError,
+    intersect_sdk_version_string,
+    resolve_user_version,
+)
+from intersect_sdk_common.control_plane.messages.event import (
+    create_event_message_headers,
+    validate_event_message_headers,
+)
+from intersect_sdk_common.control_plane.messages.lifecycle import (
+    LifecycleType,
+    create_lifecycle_message_headers,
+)
+from intersect_sdk_common.control_plane.messages.userspace import (
+    UserspaceMessageHeaders,
+    create_userspace_message_headers,
+    validate_userspace_message_headers,
+)
+from pydantic import ConfigDict, ValidationError, validate_call
+from pydantic_core import PydanticSerializationError
+from typing_extensions import Self, final
+
+from ._internal.function_metadata import FunctionMetadata
+from ._internal.generic_serializer import GENERIC_MESSAGE_SERIALIZER
+from ._internal.interfaces import IntersectEventObserver
+from ._internal.logger import logger
+from ._internal.schema import (
+    get_schema_and_functions_from_capability_implementations,
+)
+from ._internal.service_queue_name import get_service_queue_name
+from ._internal.stoppable_thread import StoppableThread
+from ._internal.utils import die, send_os_signal
+from .capability.base import IntersectBaseCapabilityImplementation
+from .capability.universal_capability.universal_capability import (
+    IntersectSdkCoreCapability,
+)
+from .client_callback_definitions import (
+    INTERSECT_CLIENT_EVENT_CALLBACK_TYPE,
+)
+from .config.service import IntersectServiceConfig
+from .exceptions import IntersectCapabilityError
+from .service_callback_definitions import (
+    INTERSECT_SERVICE_RESPONSE_CALLBACK_TYPE,
+)
+from .shared_callback_definitions import (
+    INTERSECT_JSON_VALUE,  # noqa: F401 (importing this here fixes an import error for the usage of the callback_types in the @validate_call wrappers)
+    INTERSECT_RESPONSE_VALUE,
+    IntersectDirectMessageParams,
+)
+
+
+@final
+class IntersectService(IntersectEventObserver):
+    """This is the core gateway class for a user's application into INTERSECT.
+
+    A service receives messages from a source, then sends a response message to that same source.
+    On a scientific domain level, this can be expressed through a simple functional style: you take in inputs,
+    you return your output.
+
+    The service automatically integrates all of the following components:
+      - The user-defined capabilities
+      - Any message brokers
+      - Any core INTERSECT data layers
+
+    What it does NOT do:
+      - deal with any custom messaging logic - i.e. Pyro logic, an internal ZeroMQ system, etc. ... these should be defined on the capability level.
+      - deal with any application logic - that should be handled by the capabilities
+
+    Users should generally not need to interact with objects of this class outside of the constructor and the following functions: startup(), add_startup_messages(), shutdown(), add_shutdown_messages(), create_external_request().
+    It's advisable not to mutate the service object yourself, though you can freely log out properties for debugging purposes.
+
+    Note: The ONLY stable function methods are:
+      - the constructor
+      - startup()
+      - add_startup_messages()
+      - shutdown()
+      - add_shutdown_messages()
+      - is_connected()
+      - considered_unrecoverable()
+      - forbid_keys()
+      - allow_keys()
+      - allow_all_functions()
+      - get_blocked_keys()
+      - create_external_request()
+
+    No other functions or parameters are guaranteed to remain stable.
+    """
+
+    class _ExternalRequest:
+        """Class representative of an ongoing request to another service.
+
+        TODO - currently only works as a nonblocking API.
+        """
+
+        RequestState = Literal[
+            'unhandled',
+            'sending',
+            'sent',
+            'received',
+            'processing',
+            'finalized',
+        ]
+        """
+        - unhandled = message has not been sent yet
+        - sending = intermediate state marking that we are currently sending a message (do not use in control flow)
+        - sent = message has been sent but we have not yet gotten a response
+        - received = we got a message back from the service (may be an error or not) but we have not processed it yet
+        - processing = intermediate state marking that we are currently processing a message through the callback function (do not use in control flow)
+        - finalized = will not handle request any further, mark for deletion
+        """
+
+        def __init__(
+            self,
+            req_id: UUID,
+            req_name: str,
+            request: IntersectDirectMessageParams,
+            response_handler: INTERSECT_SERVICE_RESPONSE_CALLBACK_TYPE | None = None,
+            timeout: float = 300.0,
+        ) -> None:
+            """Create an external request."""
+            self.request_state: IntersectService._ExternalRequest.RequestState = 'unhandled'
+            """The state of this request, used as the baseline for all comparisons.
+
+            This is modified across threads, but since the value should have a 'linear progression'
+            (for example - once set to 'finalized', will not be set to anything else), it should be safe to modify across threads.
+            """
+            self.sent_time = float('-inf')
+            """
+            Time that we sent off the message.
+
+            Initialized as negative infinity, but will be set to time.time() once we send off the message.
+            """
+            self.timeout = timeout
+            """Maximum amount of time to wait after the message is sent (immutable after object creation)."""
+            self.request_id = req_id
+            self.request_name = req_name
+            self.request = request
+            self.has_error = False
+            self.response_payload: INTERSECT_RESPONSE_VALUE = None
+            """Value we get back as response"""
+            self.response_fn = response_handler
+            """User callback function"""
+
+    def __init__(
+        self,
+        capabilities: list[IntersectBaseCapabilityImplementation],
+        config: IntersectServiceConfig,
+    ) -> None:
+        """The constructor performs almost all validation checks necessary to function in the INTERSECT ecosystem, with the exception of checking connections/credentials to any backing services.
+
+        Parameters:
+          capabilities: Your list of capability implementation classes
+          config: The IntersectConfig class
+        """
+        self.capabilities: list[IntersectBaseCapabilityImplementation] = [
+            IntersectSdkCoreCapability(),
+            *capabilities,
+        ]
+
+        for cap in self.capabilities:
+            if not isinstance(cap, IntersectBaseCapabilityImplementation):
+                die(
+                    f'IntersectService parameter must inherit from intersect_sdk.IntersectBaseCapabilityImplementation instead of "{cap.__class__.__name__}" .'
+                )
+            if not hasattr(cap, '__intersect_sdk_observers__'):
+                die(
+                    f'{cap.__class__.__name__} needs to call "super().__init__()" in the constructor.'
+                )
+
+            # we generally start observing and don't stop, doesn't really matter if we startup or shutdown
+            cap._intersect_sdk_register_observer(self)  # noqa: SLF001 (we don't want users calling or overriding it, but this is fine.)
+
+        # this is called here in case a user created the object using "IntersectServiceConfig.model_construct()" to skip validation
+        config = IntersectServiceConfig.model_validate(config)
+
+        (
+            schema,
+            function_map,
+            event_map,
+            status_list,
+        ) = get_schema_and_functions_from_capability_implementations(
+            [c.__class__ for c in self.capabilities],
+            service_name=config.hierarchy,
+            excluded_data_handlers=config.data_stores.get_missing_data_store_types(),
+        )
+        self._schema = schema
+        """
+        Stringified schema of the user's application. Gets sent in several status message requests.
+        """
+
+        self._function_map = MappingProxyType(function_map)
+        """
+        INTERNAL USE ONLY
+
+        Immutable mapping of operation IDs (advertised in schema, sent in message) to actual function implementations.
+        """
+
+        self._event_map = MappingProxyType(event_map)
+        """
+        INTERNAL USE ONLY
+
+        Immutable mapping of event names to actual function implementations.
+        """
+
+        self._status_list = status_list
+        """
+        INTERNAL USE ONLY
+
+        Immutable listing of capabilities
+        """
+
+        self._function_keys: set[str] = set()
+        """
+        INTERNAL USE ONLY
+
+        If a function has any key in this set, the function will not run.
+
+        Beware! Since this hash set can be mutated, there are potential problems with concurrent operations
+        if you do mutate the hash set. Only mutate this property via the public methods to minimize potential
+        concurrency issues.
+        """
+
+        self._hierarchy = config.hierarchy
+        self._uuid = uuid3(uuid1(), config.hierarchy.hierarchy_string('.'))
+
+        # for service-to-service requests where this service is the client
+        self._campaign_id = uuid4()
+
+        self._status_thread: StoppableThread | None = None
+        self._status_ticker_interval = config.status_interval
+
+        self._external_request_thread: StoppableThread | None = None
+        self._external_requests_lock = Lock()
+        self._external_requests: dict[str, IntersectService._ExternalRequest] = {}
+        self._external_request_ctr = 0
+
+        self._svc2svc_events: defaultdict[
+            str, defaultdict[str, set[INTERSECT_CLIENT_EVENT_CALLBACK_TYPE]]
+        ] = defaultdict(lambda: defaultdict(set))
+        """
+        tree of other service events we're subscribed to, and what we need to call when we get an event
+
+        i.e.
+
+        {
+          "org.fac.sys1.subsys.service": {
+            "CAP_NAME.event_name_1": [
+              # user_function_1,
+              # user_function_2
+            ]
+          }
+        }
+        """
+
+        self._startup_messages: list[
+            tuple[
+                IntersectDirectMessageParams,
+                INTERSECT_SERVICE_RESPONSE_CALLBACK_TYPE | None,
+            ]
+        ] = []
+        self._resend_startup_messages = True
+        self._sent_startup_messages = False
+
+        self._shutdown_messages: list[
+            tuple[
+                IntersectDirectMessageParams,
+                INTERSECT_SERVICE_RESPONSE_CALLBACK_TYPE | None,
+            ]
+        ] = []
+
+        self._data_plane_manager = DataPlaneManager(self._hierarchy, config.data_stores)
+        # we PUBLISH messages on this channel
+        self._lifecycle_channel_name = f'{config.hierarchy.hierarchy_string("/")}/lifecycle'
+        # we PUBLISH event messages on channels DERIVED from this
+        # `${HIERACRCHY_STRING}/events/${CAPABILITY_NAME}/${EVENT_NAME}`
+        self._events_channel_name = f'{config.hierarchy.hierarchy_string("/")}/events'
+        # we SUBSCRIBE to messages on this channel to receive requests
+        self._service_channel_name = f'{config.hierarchy.hierarchy_string("/")}/request'
+        # we SUBSCRIBE to messages on this channel to receive responses
+        self._client_channel_name = f'{config.hierarchy.hierarchy_string("/")}/response'
+
+        self._control_plane_manager = ControlPlaneManager(
+            control_configs=config.brokers,
+        )
+        # our userspace queue should be able to survive shutdown
+        self._control_plane_manager.add_subscription_channel(
+            self._service_channel_name,
+            {self._handle_service_message},
+            persist=True,
+            queue_name=get_service_queue_name(self._service_channel_name),
+        )
+        self._control_plane_manager.add_subscription_channel(
+            self._client_channel_name,
+            {self._handle_client_message},
+            persist=True,
+            queue_name=get_service_queue_name(self._client_channel_name),
+        )
+
+    def _get_capability(self, target: str) -> IntersectBaseCapabilityImplementation | None:
+        for cap in self.capabilities:
+            if cap.intersect_sdk_capability_name == target:
+                return cap
+        return None
+
+    @final
+    def startup(self) -> Self:
+        """This function connects the service to all INTERSECT systems.
+
+        You will need to call this function at least once in your application's lifecycle.
+        You will also need to call it again if you call shutdown() on the service, and want to
+        restart the INTERSECT connection without killing your application's process.
+
+        This function should only be called in your own lifecycle functions. The default INTERSECT
+        lifecycle loop will call it prior to starting the main lifecycle loop.
+
+        NOTE: any functions which were manually blocked will continue to be blocked
+        if you restart the service; call "service.allow_all_keys()" to unblock
+        all functions.
+        """
+        logger.info('Service is starting up')
+
+        self._control_plane_manager.connect()
+
+        if self.considered_unrecoverable():
+            logger.error('Cannot start service due to unrecoverable error')
+            return self
+
+        # status function should work by the time startup() is called
+        lifecycle_payload = GENERIC_MESSAGE_SERIALIZER.dump_json(
+            {
+                'schema': self._schema,
+                'status': self._status_retrieval_fn(fail_harshly=True),
+            }
+        )
+        self._send_lifecycle_message(
+            lifecycle_type='LCT_STARTUP',
+            payload=lifecycle_payload,
+        )
+
+        # Start the status thread if it doesn't already exist
+        if self._status_thread is None:
+            self._status_thread = StoppableThread(
+                target=self._status_ticker,
+                name=f'IntersectService_{self._uuid}_status_thread',
+            )
+            self._status_thread.start()
+
+        # Process pending startup messages
+        if self._resend_startup_messages or not self._sent_startup_messages:
+            logger.info('Sending startup messages')
+            for tup in self._startup_messages:
+                message, fn = tup
+                self.create_external_request(request=message, response_handler=fn)
+            self._process_external_requests()
+            self._sent_startup_messages = True
+
+        # Start the external request thread if it doesn't already exist
+        if self._external_request_thread is None:
+            self._external_request_thread = StoppableThread(
+                target=self._send_external_requests,
+                name=f'IntersectService_{self._uuid}_ext_req_thread',
+            )
+            self._external_request_thread.start()
+
+        logger.info('Service startup complete')
+        return self
+
+    @final
+    def shutdown(self, reason: str | None = None) -> Self:
+        """This function disconnects the service from all INTERSECT systems. It does NOT otherwise drop anything else from memory.
+
+        You should call this function whenever your
+        application is terminating. You may also call this function
+        if you need to temporarily disconnect from INTERSECT systems,
+        although this usecase is relatively niche.
+
+        The function should only be called in your own lifecycle functions. The default INTERSECT
+        lifecycle loop will call it once it breaks out of the main lifecycle loop.
+
+        Params:
+          - reason: an optional description you may provide as to why the adapter is shutting down.
+        """
+        logger.info(f'Service is shutting down (reason: {reason})')
+
+        if self._external_request_thread is not None:
+            self._external_request_thread.stop()
+            self._external_request_thread.join()
+            self._external_request_thread = None
+
+        logger.info('Sending shutdown messages')
+        for tup in self._shutdown_messages:
+            message, fn = tup
+            self.create_external_request(request=message, response_handler=fn)
+        self._process_external_requests()
+
+        # Stop polling
+        if self._status_thread is not None:
+            self._status_thread.stop()
+            self._status_thread.join()
+            self._status_thread = None
+
+        try:
+            self._send_lifecycle_message(
+                lifecycle_type='LCT_SHUTDOWN',
+                payload=GENERIC_MESSAGE_SERIALIZER.dump_json(reason) if reason else b'null',
+            )
+        except Exception as e:  # noqa: BLE001  (this could fail on numerous protocols)
+            logger.error(
+                'Could not send shutdown message, INTERSECT Core will eventually assume this Service has shutdown.'
+            )
+            logger.debug(e)
+
+        self._control_plane_manager.disconnect()
+
+        logger.info('Service shutdown complete')
+        return self
+
+    @final
+    def is_connected(self) -> bool:
+        """Check if we're currently connected to the INTERSECT brokers.
+
+        Returns:
+          True if we are currently connected to INTERSECT, False if not
+        """
+        return self._control_plane_manager.is_connected()
+
+    @final
+    def considered_unrecoverable(self) -> bool:
+        """Check if any broker is considered to be in an unrecoverable state.
+
+        Returns:
+          - True if we can't recover, false otherwise
+        """
+        return self._control_plane_manager.considered_unrecoverable()
+
+    def forbid_keys(self, keys: set[str]) -> Self:
+        """Block all functions annotated with any key in "keys", and send out an appropriate message.
+
+        NOTE: if you want to bulk forbid everything, you may want to call
+        adapter.shutdown() to disconnect entirely from INTERSECT.
+
+        Params:
+          keys: keys of functions you want to block
+        """
+        self._function_keys |= keys
+        payload = GENERIC_MESSAGE_SERIALIZER.dump_json(tuple(keys))
+        self._send_lifecycle_message(
+            lifecycle_type='LCT_FUNCTIONS_BLOCKED',
+            payload=payload,
+        )
+        return self
+
+    def allow_keys(self, keys: set[str]) -> Self:
+        """Allow all functions annotated with any key in "keys", and send out an appropriate message.
+
+        NOTE: if the function has multiple keys, the function will only be "allowed"
+        if all keys which have been forbidden are now allowed. If you want to bulk allow
+        everything, use "service.allow_all_functions()"
+
+        Params:
+          keys: keys of functions you want to block
+        """
+        self._function_keys -= keys
+        payload = GENERIC_MESSAGE_SERIALIZER.dump_json(tuple(keys))
+        self._send_lifecycle_message(
+            lifecycle_type='LCT_FUNCTIONS_ALLOWED',
+            payload=payload,
+        )
+        return self
+
+    def allow_all_functions(self) -> Self:
+        """Allow every function established in the service, and send out an appropriate message.
+
+        If you want to only allow certain functions, use "service.allow_keys()"
+        """
+        payload = GENERIC_MESSAGE_SERIALIZER.dump_json(tuple(self._function_keys))
+        self._function_keys.clear()
+        self._send_lifecycle_message(
+            lifecycle_type='LCT_FUNCTIONS_ALLOWED',
+            payload=payload,
+        )
+        return self
+
+    def block_all_functions(self) -> Self:
+        """Block every function which _can_ be blocked in the service, and send out an appropriate message.
+
+        Note that this does NOT disconnect from INTERSECT, and will not block functions which
+        have no markings.
+        """
+        self._function_keys = set.union(*(f.shutdown_keys for f in self._function_map.values()))
+        payload = GENERIC_MESSAGE_SERIALIZER.dump_json(tuple(self._function_keys))
+        self._send_lifecycle_message(
+            lifecycle_type='LCT_FUNCTIONS_BLOCKED',
+            payload=payload,
+        )
+        return self
+
+    def get_blocked_keys(self) -> set[str]:
+        """Returns a set of the function keys which indicate the function should be blocked.
+
+        Note that this returns a shallow copy, as the inner reference should NOT be mutated externally.
+        """
+        return self._function_keys.copy()
+
+    def add_startup_messages(
+        self,
+        messages: list[
+            tuple[
+                IntersectDirectMessageParams,
+                INTERSECT_SERVICE_RESPONSE_CALLBACK_TYPE | None,
+            ]
+        ],
+    ) -> None:
+        """Add request messages to send out to various microservices when this service starts.
+
+        Params:
+          - messages: list of tuples - first value in tuple contains the messages you want to send out on startup,
+              second value in tuple contains the callback function for handling the response from the other Service.
+        """
+        self._startup_messages.extend(messages)
+
+    def add_shutdown_messages(
+        self,
+        messages: list[
+            tuple[
+                IntersectDirectMessageParams,
+                INTERSECT_SERVICE_RESPONSE_CALLBACK_TYPE | None,
+            ]
+        ],
+    ) -> None:
+        """Add request messages to send out to various microservices on shutdown.
+
+        Params:
+          - messages: list of tuples - first value in tuple contains the messages you want to send out on startup,
+              second value in tuple contains the callback function for handling the response from the other Service.
+        """
+        self._shutdown_messages.extend(messages)
+
+    @validate_call(config=ConfigDict(revalidate_instances='always'))
+    def register_event(
+        self,
+        service: HierarchyConfig,
+        capability_name: str,
+        event_name: str,
+        response_handler: INTERSECT_CLIENT_EVENT_CALLBACK_TYPE,
+    ) -> None:
+        """Begin subscribing to events from a different Service.
+
+        Params:
+          - service: HierarchyConfig of the service we want to talk to
+          - capability_name: name of capability which will fire off the event
+          - event_name: name of event to subscribe to
+          - response_handler: callback for how to handle the reception of an event
+        """
+        hierarchy = service.hierarchy_string('.')
+        self._svc2svc_events[hierarchy][f'{capability_name}.{event_name}'].add(response_handler)
+
+        event_channel_name = (
+            f'{service.hierarchy_string("/")}/events/{capability_name}/{event_name}'
+        )
+        self._control_plane_manager.add_subscription_channel(
+            event_channel_name,
+            {self._svc2svc_event_callback},
+            persist=True,
+            queue_name=get_service_queue_name(event_channel_name),
+        )
+
+    def _svc2svc_event_callback(
+        self, payload: bytes, content_type: str, raw_headers: dict[str, str]
+    ) -> None:
+        """Callback received when this service gets an event from another service.
+
+        Deserializes and validates an EventMessage, will call a userspace function accordingly.
+        """
+        try:
+            headers = validate_event_message_headers(raw_headers)
+        except ValidationError as e:
+            logger.warning(
+                "Invalid message received from another service's events channel, ignoring. Full message:\n{}",
+                e,
+            )
+            return
+        logger.debug('Received event message:\n{}', headers)
+        try:
+            request_params = self._data_plane_manager.incoming_message_data_handler(
+                payload, headers.data_handler
+            )
+            if content_type == 'application/json':
+                request_params = GENERIC_MESSAGE_SERIALIZER.validate_json(request_params)
+        except ValidationError as e:
+            logger.warning(
+                'Invalid payload message received as an event, ignoring. Full message: {}',
+                e,
+            )
+            return
+        source = headers.source
+        capability_name = headers.capability_name
+        event_name = headers.event_name
+        for user_callback in self._svc2svc_events[source][f'{capability_name}.{event_name}']:
+            try:
+                user_callback(source, capability_name, event_name, request_params)
+            except Exception as e:  # noqa: BLE001 (need to catch any possible user exception)
+                logger.warning(
+                    '!!! INTERSECT: event callback function "%s" produced uncaught exception when handling event "%s" from "%s"',
+                    user_callback.__name__,
+                    event_name,
+                    source,
+                )
+                logger.warning(e)
+
+    @validate_call(config=ConfigDict(revalidate_instances='always'))
+    def create_external_request(
+        self,
+        request: IntersectDirectMessageParams,
+        response_handler: INTERSECT_SERVICE_RESPONSE_CALLBACK_TYPE | None = None,
+        timeout: float = 300.0,
+    ) -> UUID:
+        """Create an external request that we'll send to a different Service.
+
+        Params:
+          - request: the request we want to send out, encapsulated as an IntersectDirectMessageParams object
+          - response_handler: optional callback for how we want to handle the response from this request.
+          - timeout: optional value for how long we should wait on the request, in seconds (default: 300 seconds)
+
+        Returns:
+          - generated RequestID associated with your request
+
+        Raises:
+          - pydantic.ValidationError - if the request parameter isn't valid
+        """
+        self._external_request_ctr += 1
+        request_name = f'ext-req-{self._external_request_ctr}'
+        request_uuid = uuid3(self._uuid, request_name)
+        extreq = IntersectService._ExternalRequest(
+            req_id=request_uuid,
+            req_name=request_name,
+            request=request,
+            response_handler=response_handler,
+            timeout=timeout,
+        )
+        self._external_requests_lock.acquire_lock(blocking=True)
+        self._external_requests[str(request_uuid)] = extreq
+        self._external_requests_lock.release_lock()
+        return request_uuid
+
+    def _get_external_request(self, req_id: UUID) -> _ExternalRequest | None:
+        req_id_str = str(req_id)
+        if req_id_str in self._external_requests:
+            req: IntersectService._ExternalRequest = self._external_requests[req_id_str]
+            return req
+        return None
+
+    def _process_external_requests(self) -> None:
+        # use the lock to get an initial list of requests, but do not process them while we have obtained the lock; processing can take time
+        self._external_requests_lock.acquire_lock(blocking=True)
+        requests_to_process = [
+            req
+            for req in self._external_requests.values()
+            if req.request_state not in ('finalized', 'sent')
+        ]
+        self._external_requests_lock.release_lock()
+
+        # process the requests without holding the lock - these requests can potentially take time
+        # the request values ARE mutable, but the main external request dictionary is NOT
+        for req in requests_to_process:
+            self._process_external_request(req)
+
+        # acquire lock for cleanup
+        self._external_requests_lock.acquire_lock(blocking=True)
+        cleanup_list = [
+            str(extreq.request_id)
+            for extreq in self._external_requests.values()
+            if extreq.request_state == 'finalized'
+            or (extreq.request_state == 'sent' and time.time() - extreq.sent_time > extreq.timeout)
+        ]
+        for extreq_id in cleanup_list:
+            extreq = self._external_requests.pop(extreq_id)
+            del extreq
+        self._external_requests_lock.release_lock()
+
+    def _process_external_request(self, extreq: _ExternalRequest) -> None:
+        if extreq.request_state == 'unhandled':
+            # use temporary intermediate state to avoid sending message twice
+            extreq.request_state = 'sending'
+            # need to send the request
+            if self._send_client_message(request_id=extreq.request_id, params=extreq.request):
+                extreq.request_state = 'sent'
+                extreq.sent_time = time.time()
+            else:
+                # we were unable to even send the message, so immediately mark it for cleanup
+                extreq.request_state = 'finalized'
+        elif extreq.request_state == 'received':
+            # use temporary intermediate state to avoid calling user function twice
+            extreq.request_state = 'processing'
+            if extreq.response_fn:
+                # call user function
+                try:
+                    extreq.response_fn(
+                        extreq.request.destination,
+                        extreq.request.operation,
+                        extreq.has_error,
+                        extreq.response_payload,
+                    )
+                except Exception as e:  # noqa: BLE001 (need to catch all user exceptions)
+                    logger.warning(
+                        f'!!! INTERSECT: service callback function "{extreq.response_fn.__name__}" produced uncaught exception',
+                        e,
+                    )
+            extreq.request_state = 'finalized'
+
+    def _handle_service_message(
+        self, payload: bytes, content_type: str, raw_headers: dict[str, str]
+    ) -> None:
+        """Main broker callback function.
+
+        Deserializes and validates a userspace message from a broker.
+
+        This function is also responsible for publishing all response messages from the broker
+        """
+        try:
+            headers = validate_userspace_message_headers(raw_headers)
+            logger.debug(f'Received userspace message:\n{headers}')
+            response = self._handle_service_message_inner(payload, content_type, headers)
+            if response:
+                response_payload, response_content_type, response_headers = response
+                logger.debug(
+                    'Send %s message:\n%s',
+                    'error' if response_headers['has_error'] else 'userspace',
+                    response_headers,
+                )
+                response_channel = f'{headers.source.replace(".", "/")}/response'
+                # Persistent userspace messages may be useful for orchestration.
+                # Persistence will not hurt anything.
+                self._control_plane_manager.publish_message(
+                    response_channel,
+                    response_payload,
+                    response_content_type,
+                    response_headers,
+                    persist=True,
+                )
+        except ValidationError as e:
+            logger.warning(
+                f'Invalid message received on userspace message channel, ignoring. Full message:\n{e}'
+            )
+
+    def _handle_service_message_inner(
+        self,
+        payload: bytes,
+        content_type: str,
+        headers: UserspaceMessageHeaders,
+    ) -> tuple[bytes, str, dict[str, str]] | None:
+        """Main logic for handling a userspace message, minus all broker logic.
+
+        Params
+          payload: raw data from client
+          content_type: content type of the message
+          headers: validated headers
+        Returns
+          None if we don't want to send anything.
+          Otherwise, return a tuple of the raw data we'll send back, the content type of the data, and the headers.
+
+        """
+        # ONE: HANDLE CORE COMPAT ISSUES
+        # is this first branch necessary? May not be in the future
+        if self._hierarchy.hierarchy_string('.') != headers.destination:
+            return None
+        if not resolve_user_version(headers.sdk_version, headers.source, headers.data_handler):
+            return (
+                f'SDK version incompatibility. Service version: {intersect_sdk_version_string} . Sender version: {headers.sdk_version}'.encode(),
+                'text/plain',
+                self._make_error_message_headers(headers),
+            )
+
+        # TWO: OPERATION EXISTS, CONTENT TYPE MATCHES, AND OPERATION IS AVAILABLE
+        operation = headers.operation_id
+        operation_meta = self._function_map.get(operation)
+        if operation_meta is None:
+            err_msg = f'Tried to call non-existent operation {operation}'
+            logger.debug(err_msg)
+            return (
+                err_msg.encode(),
+                'text/plain',
+                self._make_error_message_headers(headers),
+            )
+
+        if operation_meta.request_content_type != content_type:
+            err_msg = f'For operation {operation}, request content type {content_type} differs from actual content type {operation_meta.request_content_type}'
+            logger.debug(err_msg)
+            return (
+                err_msg.encode(),
+                'text/plain',
+                self._make_error_message_headers(headers),
+            )
+
+        if self._function_keys & operation_meta.shutdown_keys:
+            err_msg = f"Function '{operation}' is currently not available for use."
+            logger.error(err_msg)
+            return (
+                err_msg.encode(),
+                'text/plain',
+                self._make_error_message_headers(headers),
+            )
+
+        operation_capability, operation_method = operation.split('.')
+        target_capability = self._get_capability(operation_capability)
+        if target_capability is None:
+            err_msg = f"Could not locate service capability providing '{operation_capability}' for operation {operation}."
+            logger.error(err_msg)
+            return (
+                err_msg.encode(),
+                'text/plain',
+                self._make_error_message_headers(headers),
+            )
+
+        # THREE: GET DATA FROM APPROPRIATE DATA STORE
+        try:
+            request_params = self._data_plane_manager.incoming_message_data_handler(
+                payload, headers.data_handler
+            )
+        except IntersectError:
+            # could theoretically be either a service or client issue
+            # XXX send a better error message?
+            return (
+                b'Could not get data from data handler',
+                'text/plain',
+                self._make_error_message_headers(headers),
+            )
+
+        try:
+            # FOUR: CALL USER FUNCTION AND GET MESSAGE
+            response = self._call_user_function(
+                target_capability,
+                operation_method,
+                operation_meta,
+                request_params,
+            )
+            # FIVE: SEND DATA TO APPROPRIATE DATA STORE
+            response_data_handler = operation_meta.response_data_transfer_handler
+            response_content_type = operation_meta.response_content_type
+            response_payload = self._data_plane_manager.outgoing_message_data_handler(
+                response, response_content_type, response_data_handler
+            )
+        except ValidationError as e:
+            # client issue with request parameters
+            return (
+                f'Bad arguments to application:\n{e}'.encode(),
+                'text/plain',
+                self._make_error_message_headers(headers),
+            )
+        except IntersectCapabilityError as e:
+            return (
+                f'Service domain logic threw explicit exception:\n{e}'.encode(),
+                'text/plain',
+                self._make_error_message_headers(headers),
+            )
+        except IntersectApplicationError:
+            # domain-level exception not explicitly caught; do not send specifics about the exception because it may leak internals
+            return (
+                b'Service domain logic threw exception.',
+                'text/plain',
+                self._make_error_message_headers(headers),
+            )
+        except IntersectError:
+            # XXX send a better error message? This is a service issue
+            return (
+                b'Could not send data to data handler',
+                'text/plain',
+                self._make_error_message_headers(headers),
+            )
+
+        # SIX: SEND MESSAGE
+        response_headers = create_userspace_message_headers(
+            source=headers.destination,
+            destination=headers.source,
+            data_handler=response_data_handler,
+            operation_id=headers.operation_id,
+            request_id=headers.request_id,
+            campaign_id=headers.campaign_id,
+        )
+        return (response_payload, response_content_type, response_headers)
+
+    def _handle_client_message(
+        self, payload: bytes, content_type: str, raw_headers: dict[str, str]
+    ) -> None:
+        """Broker callback, deserialize and validate a userspace message from a broker.
+
+        These are 'response' messages from this service calling another service.
+        """
+        try:
+            headers = validate_userspace_message_headers(raw_headers)
+            logger.debug(f'Received userspace message:\n{headers}')
+        except ValidationError as e:
+            logger.warning(
+                f'Invalid message received on client message channel, ignoring. Full message:\n{e}'
+            )
+            return
+
+        extreq = self._get_external_request(headers.request_id)
+        if extreq is not None:
+            error_msg: str | None = None
+            try:
+                msg_payload = self._data_plane_manager.incoming_message_data_handler(
+                    payload, headers.data_handler
+                )
+                if content_type == 'application/json':
+                    msg_payload = GENERIC_MESSAGE_SERIALIZER.validate_json(msg_payload)
+            except ValidationError as e:
+                error_msg = f'Service sent back invalid response:\n{e}'
+                logger.warning(error_msg)
+            except IntersectError:
+                error_msg = 'INTERNAL ERROR: failed to get message payload from data handler'
+                logger.error(error_msg)
+
+            if error_msg:
+                # we did not get a valid INTERSECT message back, so just mark it for cleanup
+                extreq.request_state = 'finalized'
+            elif (
+                extreq.request.destination != headers.source
+                or extreq.request.operation != headers.operation_id
+            ):
+                logger.warning(
+                    'Possible spoof message, discarding. Target destination',
+                    extreq.request.destination,
+                    'Actual source',
+                    headers.source,
+                    'Target operation',
+                    extreq.request.operation,
+                    'Actual operation',
+                    headers.operation_id,
+                )
+                extreq.request_state = 'finalized'
+            else:
+                # success
+                extreq.response_payload = msg_payload
+                extreq.has_error = headers.has_error
+                extreq.request_state = 'received'
+        else:
+            error_msg = f'No external request found for message:\n{headers}'
+            logger.warning(error_msg)
+
+    def _send_client_message(self, request_id: UUID, params: IntersectDirectMessageParams) -> bool:
+        """Send a userspace message."""
+        # "params" should already be validated at this stage.
+
+        if params.content_type == 'application/json':
+            request = GENERIC_MESSAGE_SERIALIZER.dump_json(params.payload, warnings=False)
+        else:
+            if not isinstance(params.content_type, bytes):
+                logger.error(
+                    'service-to-service message must be bytes if content-type is not application/json'
+                )
+                return False
+            request = params.payload
+
+        # TWO: SEND DATA TO APPROPRIATE DATA STORE
+        try:
+            request_payload = self._data_plane_manager.outgoing_message_data_handler(
+                request, params.content_type, params.data_handler
+            )
+        except IntersectError:
+            return False
+
+        # THREE: SEND MESSAGE
+        headers = create_userspace_message_headers(
+            source=self._hierarchy.hierarchy_string('.'),
+            destination=params.destination,
+            data_handler=params.data_handler,
+            operation_id=params.operation,
+            request_id=request_id,
+            campaign_id=self._campaign_id,
+        )
+        logger.debug(f'Sending client message:\n{headers}')
+        request_channel = f'{params.destination.replace(".", "/")}/request'
+        self._control_plane_manager.publish_message(
+            request_channel,
+            request_payload,
+            params.content_type,
+            headers,
+            persist=True,
+        )
+        return True
+
+    def _call_user_function(
+        self,
+        fn_cap: IntersectBaseCapabilityImplementation,
+        fn_name: str,
+        fn_meta: FunctionMetadata,
+        fn_params: bytes,
+    ) -> bytes:
+        """Entrypoint into capability. This should be a private function, only call it yourself for testing purposes.
+
+        Basic validations defined from a user's type definitions will also occur here.
+
+        Params
+        fn_cap  = capability implementing the user function
+        fn_name = operation. These get represented in the schema as "endpoints".
+        fn_meta = all information stored about the user's operation. This includes user-defined params and the request/response (de)serializers.
+        fn_params = the request argument, the actual domain logic.
+
+
+        Returns:
+            If the capability executed with no problems, a byte-string of the response will be returned.
+            NOTE: You should make sure you are returning a type which matches your return annotation; if you don't, this causes later issues.
+
+        Raises:
+          IntersectApplicationException - this catches both invalid message arguments, as well as if the capability itself throws an Exception.
+            It's meant to be for control-flow, it doesn't represent a fatal error.
+          ValidationError - this is a Pydantic error which occurs if the endpoint expects JSON input, and the input fails to validate against the user's model.
+            Note that this error is never raised outside this function if the USER's code causes this exception (by doing internal pydantic validation themselves),
+            but only as related to the actual request parameters.
+
+        NOTE: running this function should normally not cause application failure. Users can terminate their application inside their capability class,
+        but in almost all circumstances, this should be discouraged (outside of the constructor).
+        """
+        if fn_meta.request_content_type == 'application/json':
+            # begin Pydantic validation workflow
+            if fn_meta.request_adapter:
+                # user has a function parameter
+                try:
+                    if not fn_params or fn_params == b'null':
+                        # strict=True here does nothing, because ConfigDict property validate_default may not be set and we validate defaults when generating the schema
+                        default_value = fn_meta.request_adapter.get_default_value()
+                        try:
+                            request_obj = default_value.value  # type: ignore[union-attr]
+                        except AttributeError:
+                            request_obj = fn_meta.request_adapter.validate_python(
+                                None,
+                            )
+                    else:
+                        request_obj = fn_meta.request_adapter.validate_json(
+                            fn_params,
+                            strict=fn_meta.strict_validation,
+                        )
+                except ValidationError as e:
+                    err_msg = f'Bad arguments to application:\n{e}\n'
+                    logger.warning(err_msg)
+                    raise
+                try:
+                    response = getattr(fn_cap, fn_name)(request_obj)
+                except IntersectCapabilityError as e:
+                    logger.warning(f'Capability raised explicit exception:\n{e}\n')
+                    raise
+                except (
+                    Exception
+                ) as e:  # (need to catch all possible exceptions to gracefully handle the thread)
+                    logger.warning(f'Capability raised exception:\n{e}\n')
+                    raise IntersectApplicationError from e
+            else:
+                # user does not have a function parameter
+                try:
+                    response = getattr(fn_cap, fn_name)()
+                except IntersectCapabilityError as e:
+                    logger.warning(f'Capability raised explicit exception:\n{e}\n')
+                    raise
+                except (
+                    Exception
+                ) as e:  # (need to catch all possible exceptions to gracefully handle the thread)
+                    logger.warning(f'Capability raised exception:\n{e}\n')
+                    raise IntersectApplicationError from e
+        else:
+            # handle requests for expected binary data
+            # note that users should not be specifying a default value here
+            try:
+                if fn_meta.request_adapter is not None:
+                    response = getattr(fn_cap, fn_name)(fn_params)
+                else:
+                    response = getattr(fn_cap, fn_name)()
+            except IntersectCapabilityError as e:
+                logger.warning(f'Capability raised explicit exception:\n{e}\n')
+                raise
+            except (
+                Exception
+            ) as e:  # (need to catch all possible exceptions to gracefully handle the thread)
+                logger.warning(f'Capability raised exception:\n{e}\n')
+                raise IntersectApplicationError from e
+
+        if fn_meta.response_adapter:
+            # JSON serialization workflow
+            try:
+                return fn_meta.response_adapter.dump_json(response, by_alias=True, warnings='error')
+            except PydanticSerializationError as e:
+                logger.error(
+                    f'IMPORTANT!!!! Your INTERSECT capability function did not return a value matching your response type. You MUST fix this for your message to be sent out! Full error:\n{e}\n'
+                )
+                raise IntersectApplicationError from e
+
+        # at this point we need to assume best-effort on the user's part, as we don't handle binary data ourselves
+        # make sure they have returned bytes in their return value
+        if not isinstance(response, bytes):
+            logger.error(
+                'IMPORTANT: If your response_content_type is not application/json, you MUST return raw bytes from your function.'
+            )
+            raise IntersectApplicationError
+
+        return response
+
+    def _on_observe_event(self, event_name: str, event_value: Any, capability_name: str) -> None:
+        """This is the service function which handles events from the capabilities (as opposed to handling messages).
+
+        This function needs to:
+          1) verify that "event_name" is correctly registered for the user "entrypoint" function
+          2) verify that "event_name" can emit "event_value" for "operation"
+          3) try to parse "event_value" into the type the user specified (there will be an event name to type annotation mapping)
+          4) If the value correctly passes schema validation, fire the event
+
+        Note that if validation fails, we simply log the error out and return. We do not broadcast an error message.
+        """
+        event_meta = self._event_map.get(capability_name, {}).get(event_name)
+        if event_meta is None:
+            logger.error(
+                f"Event name '{event_name}' was not registered on capability '{capability_name}', so event will not be emitted.\nEvent value: {event_value}"
+            )
+            return
+
+        if event_meta.content_type == 'application/json':
+            try:
+                response = event_meta.type_adapter.dump_json(
+                    event_value, by_alias=True, warnings='error'
+                )
+            except PydanticSerializationError as e:
+                logger.error(
+                    f"Value emitted for event name '{event_name}' from capability '{capability_name}' does not match schema.\nEvent value: {event_value}\nPydantic error: {e}"
+                )
+                return
+        else:
+            if not isinstance(event_value, bytes):
+                logger.error(
+                    'Event type "%s" from capability "%s" emitted non-binary value when content-type is not application/json, you must change this to actually emit the event',
+                    event_name,
+                    capability_name,
+                )
+                return
+            response = event_value
+
+        try:
+            response_payload = self._data_plane_manager.outgoing_message_data_handler(
+                response,
+                event_meta.content_type,
+                event_meta.data_transfer_handler,
+            )
+        except IntersectError:
+            # error should already be logged from the outgoing_message_data_handler function
+            return
+
+        headers = create_event_message_headers(
+            source=self._hierarchy.hierarchy_string('.'),
+            capability_name=capability_name,
+            data_handler=event_meta.data_transfer_handler,
+            event_name=event_name,
+        )
+        full_events_channel_name = f'{self._events_channel_name}/{capability_name}/{event_name}'
+        self._control_plane_manager.publish_message(
+            full_events_channel_name,
+            response_payload,
+            event_meta.content_type,
+            headers,
+            persist=True,
+        )
+
+    def _make_error_message_headers(
+        self, original_headers: UserspaceMessageHeaders
+    ) -> dict[str, str]:
+        """Generate an error message.
+
+        Params:
+          original_headers: The original message headers
+        Returns:
+          the headers we will send as a reply
+        """
+        return create_userspace_message_headers(
+            source=original_headers.destination,
+            destination=original_headers.source,
+            data_handler=IntersectDataHandler.MESSAGE,
+            operation_id=original_headers.operation_id,
+            campaign_id=original_headers.campaign_id,
+            request_id=original_headers.request_id,
+            has_error=True,
+        )
+
+    def _send_lifecycle_message(self, lifecycle_type: LifecycleType, payload: bytes) -> None:
+        """Send out a lifecycle message."""
+        headers = create_lifecycle_message_headers(
+            source=self._hierarchy.hierarchy_string('.'),
+            lifecycle_type=lifecycle_type,
+        )
+        logger.debug('Send lifecycle message \nHEADERS: %s\n\n%s', payload, headers)
+        # Lifecycle messages are meant to be short-lived, only the latest message has any usage for systems uninterested in logging,
+        # and queues will be regularly polled about these. Do not persist them.
+        self._control_plane_manager.publish_message(
+            self._lifecycle_channel_name,
+            payload,
+            'application/json',
+            headers,
+            persist=False,
+        )
+
+    def _status_retrieval_fn(self, fail_harshly: bool) -> dict[str, Any]:
+        """Call all capability status functions configured.
+
+        We generally want to call this once during startup to verify that the user has a potentially valid status function.
+
+        However, the status function can potentially fail later on during the runtime, in which case we will just log the error and continue.
+        During runtime, we'll mark the capability of the status as returning null, which indicates that the status was expected to return a value but did not.
+        """
+        status_map = {}
+        for status in self._status_list:
+            try:
+                capability = self._get_capability(status.capability_name)
+                result = status.serializer.dump_python(
+                    getattr(capability, status.function_name)(),
+                    by_alias=True,
+                    warnings='error',
+                )
+                status_map[status.capability_name] = result
+            except Exception as e:  # noqa: BLE001 (should catch all exceptions at this point)
+                msg = f"Status function check for capability '{status.capability_name}' raised an exception, please make sure that the value it's returning matches the type of its return function and that you can reliably call it during service.startup() or default_intersect_lifecycle_loop(service). Exception:\n{e}"
+                if fail_harshly:
+                    # The status function should only be called when the application developer wants to be connected to the INTERSECT broker.
+                    # If we reach this point, the application should be given the opportunity to do a graceful shutdown, so send a SIGTERM instead of immediately dying
+                    logger.critical(msg)
+                    send_os_signal()
+                logger.error(msg)
+                status_map[status.capability_name] = None
+        return status_map
+
+    def _status_ticker(self) -> None:
+        """Periodically sends lifecycle polling messages showing the Service's state. Runs in a separate thread."""
+        # initial wait should guarantee that polling message does not beat initial startup message
+        if self._status_thread:
+            if self._status_ticker_interval < 60.0:
+                self._status_thread.wait(60.0)
+            else:
+                self._status_thread.wait(self._status_ticker_interval)
+            while not self._status_thread.stopped():
+                payload = GENERIC_MESSAGE_SERIALIZER.dump_json(
+                    {
+                        'schema': self._schema,
+                        'status': self._status_retrieval_fn(fail_harshly=False),
+                    }
+                )
+                self._send_lifecycle_message(
+                    lifecycle_type='LCT_POLLING',
+                    payload=payload,
+                )
+                self._status_thread.wait(self._status_ticker_interval)
+
+    def _send_external_requests(self) -> None:
+        """Periodically sends messages added to self._external_messages. Runs in a separate thread."""
+        # initial wait should guarantee that first request message does not beat initial startup message
+        if self._external_request_thread:
+            self._external_request_thread.wait(10.0)
+            while not self._external_request_thread.stopped():
+                self._process_external_requests()
+                self._external_request_thread.wait(0.5)

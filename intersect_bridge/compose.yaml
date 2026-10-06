@@ -1,0 +1,14 @@
+services:
+  broker:
+    image: rabbitmq:4.1-management
+    hostname: raman-broker
+    ports:
+      - "127.0.0.1:1883:1883"
+    environment:
+      RABBITMQ_DEFAULT_USER: raman
+      RABBITMQ_DEFAULT_PASS: ${RAMAN_BROKER_PASSWORD:?Set RAMAN_BROKER_PASSWORD}
+    volumes:
+      - ./enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+      - broker-data:/var/lib/rabbitmq
+volumes:
+  broker-data:

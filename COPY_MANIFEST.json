@@ -1,0 +1,895 @@
+{
+  "original_files_modified": false,
+  "verification": "SHA-256 source and copy compared for every file",
+  "files": [
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\main.cpp",
+      "copy": "main.cpp",
+      "bytes": 78492,
+      "sha256": "9761d803abfcfcf46ac8135d087cead46994585be912e24ee773cab398bf974e",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\mainwindow.cpp",
+      "copy": "mainwindow.cpp",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\mainwindow.h",
+      "copy": "mainwindow.h",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\mainwindow.ui",
+      "copy": "mainwindow.ui",
+      "bytes": 723,
+      "sha256": "513a99a697261c9db77d47c3ef71f77163e8aee30c52644ebc5894da22f33514",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\acquisition_protocol.h",
+      "copy": "acquisition_protocol.h",
+      "bytes": 2405,
+      "sha256": "43e956110ce4e416d48342622aa62993f30a4eccb3b0dad6c0d4e208c1c702f3",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\CMakeLists.txt",
+      "copy": "CMakeLists.txt",
+      "bytes": 1783,
+      "sha256": "e3c6e30494ad7aab00dde472fa5022deac40623e2eb675d9550f0cd4a5422c7b",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build_handshake.cmd",
+      "copy": "build_handshake.cmd",
+      "bytes": 753,
+      "sha256": "789489d5b27d74871508a7256446b8f8c0428ca9ee17cae7115d80820a4fe8df",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\rebuild_raman_autofocus.cmd",
+      "copy": "rebuild_raman_autofocus.cmd",
+      "bytes": 357,
+      "sha256": "40b255fffa120b7eb9c5ddd09ecd378807f31b90e64dfe1d23d736e8f3e307b3",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\export_combined_scan.py",
+      "copy": "export_combined_scan.py",
+      "bytes": 1478,
+      "sha256": "ae0da1ebc669b4f56bd4cf0a957c29943b9cbed13888a24977846e4b7217010a",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\HANDSHAKE_UPDATE.md",
+      "copy": "HANDSHAKE_UPDATE.md",
+      "bytes": 10103,
+      "sha256": "05eae76e343bb791041aba40a09dc9f904058e803cc87a5c453010974bd15339",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\RAMAN_MIGRATION_20260922.md",
+      "copy": "RAMAN_MIGRATION_20260922.md",
+      "bytes": 2438,
+      "sha256": "c5a474da6cee83ba8960ef9e9b271a9b58ea5d7ab72b89c0c1a422c9b3da3382",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\.gitignore",
+      "copy": "intersect_bridge/.gitignore",
+      "bytes": 131,
+      "sha256": "c61ea4daa1eadf88bc6431187fc5a12455b797d28d3b1ada3d64ece3c5df5995",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\build_launcher.cmd",
+      "copy": "intersect_bridge/build_launcher.cmd",
+      "bytes": 177,
+      "sha256": "aa767e88064831965f3abcada321378c3eb000819f12304250d7178c7134f105",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\build_qt.cmd",
+      "copy": "intersect_bridge/build_qt.cmd",
+      "bytes": 604,
+      "sha256": "8c6b2c9592f7045d4843884c50b0806170f196537cc3d731b0538f11093c80a2",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\client.py",
+      "copy": "intersect_bridge/client.py",
+      "bytes": 2832,
+      "sha256": "91a6feb8b9dc73cd9ba35d30a9834f441b4444a92e96c4ef0a602908c2c33150",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\common.py",
+      "copy": "intersect_bridge/common.py",
+      "bytes": 1447,
+      "sha256": "099c6a620208f286ec1d18d58ad231692483e20c91362ecf3ddc2c495891c628",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\compose.yaml",
+      "copy": "intersect_bridge/compose.yaml",
+      "bytes": 390,
+      "sha256": "dd24908a3e20a52c8a66db205b6c65d678165f29304a0cf14bc1ecaa76f65cf9",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\config.example.json",
+      "copy": "intersect_bridge/config.example.json",
+      "bytes": 684,
+      "sha256": "c7924e91871d11a9d946df937f18659b7842f3c4a05366653fedf8609da3adad",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\controller.py",
+      "copy": "intersect_bridge/controller.py",
+      "bytes": 3683,
+      "sha256": "8d07755a6c58bc9300e0618f4df1ed7b723fe9dbff0e989a9018612ca57293e1",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\enabled_plugins",
+      "copy": "intersect_bridge/enabled_plugins",
+      "bytes": 37,
+      "sha256": "51ae2cc535c78ab8096f4718e34bb7ae122059286042a31a8a82aa4daac20065",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\launcher.py",
+      "copy": "intersect_bridge/launcher.py",
+      "bytes": 11937,
+      "sha256": "8118e352d8c0c17798752eb226028d99dd96c8c3e6a4e1bf39f332fceee933a5",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\launcher_core.py",
+      "copy": "intersect_bridge/launcher_core.py",
+      "bytes": 14223,
+      "sha256": "1ed79610df00b4a2558827231d10f17566367d7170629017d615d80c6b88e908",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\launcher_rpc.py",
+      "copy": "intersect_bridge/launcher_rpc.py",
+      "bytes": 2194,
+      "sha256": "1bb76a02d2c47e3796daec9066c9cbc639d505330210d2fca2fad356ceba448e",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\prepare_qt.py",
+      "copy": "intersect_bridge/prepare_qt.py",
+      "bytes": 5036,
+      "sha256": "bf7af6fb46445e0420e2bc887d2ed7ebdd22bee7c45ea2bc0586692bf5ba4eae",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\qt_bridge_members.inc",
+      "copy": "intersect_bridge/qt_bridge_members.inc",
+      "bytes": 4350,
+      "sha256": "7aa4a4d9ead99141d413e1880ef35ced229ec8544a3f1900415e9c9acda33646",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\qt_client.py",
+      "copy": "intersect_bridge/qt_client.py",
+      "bytes": 1782,
+      "sha256": "ec9b20728413bea63251228ce74cbba8ca434dc734403c99f5c3900552b7dc52",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\RamanLauncher.exe",
+      "copy": "intersect_bridge/RamanLauncher.exe",
+      "bytes": 38416082,
+      "sha256": "798cfcb523ff275dd65af1a054e758e957c70c6e6889d5105982821a9d12d647",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\README.md",
+      "copy": "intersect_bridge/README.md",
+      "bytes": 8929,
+      "sha256": "f8b2bbc9234aa9c62ef3f5ceb40f7e7caaf8ebd7f288bacf0971c89a972ec3a9",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\replay.py",
+      "copy": "intersect_bridge/replay.py",
+      "bytes": 952,
+      "sha256": "45db155f3e815de2021a1cea33aca09d620d7395f79c283f76b1018f69136409",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\requirements-launcher.txt",
+      "copy": "intersect_bridge/requirements-launcher.txt",
+      "bytes": 57,
+      "sha256": "fddcec0451402e28d0ab7211e5d89321f5b5a097d0ee0a3d8301b5ae83ed20d7",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\requirements.txt",
+      "copy": "intersect_bridge/requirements.txt",
+      "bytes": 70,
+      "sha256": "62a03989fb16c75ce7937fcf864da660c8edba23dd594a3e91ccda4342691ce3",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\service.py",
+      "copy": "intersect_bridge/service.py",
+      "bytes": 3051,
+      "sha256": "eb9a0c1445eec155988b2429813746bd39ab46e56dd445e19a49ffbee405b256",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\start_qt.cmd",
+      "copy": "intersect_bridge/start_qt.cmd",
+      "bytes": 181,
+      "sha256": "ca89bdff16a1f16e9de121699e7dc280946735ec63c76a763b1401a3675a3bc5",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\start_service.cmd",
+      "copy": "intersect_bridge/start_service.cmd",
+      "bytes": 71,
+      "sha256": "2baf1e332537b431876fa6c846d976573ac2c7bae57557bef6d271e7a6447181",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\svm_predictor.py",
+      "copy": "intersect_bridge/svm_predictor.py",
+      "bytes": 3941,
+      "sha256": "c5f5ef27f20dd954cfa40d103df0f89fffab03f6a9972289e9524a1906b6a601",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\test_bridge.py",
+      "copy": "intersect_bridge/test_bridge.py",
+      "bytes": 3687,
+      "sha256": "239e531675ef57355d1ab5bce154959894d7e592dbf9de9b425d2248d21f33df",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\test_launcher.py",
+      "copy": "intersect_bridge/test_launcher.py",
+      "bytes": 4268,
+      "sha256": "42bf12185b1ea21bbbeedba7a129f3e09f887f7bba81a3f1d1e85b2efe93be1c",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\test_launcher_transport.py",
+      "copy": "intersect_bridge/test_launcher_transport.py",
+      "bytes": 2892,
+      "sha256": "308bb473ead5ea3dfdf64a000fe99591ae7429e45a9ba6f9590a47ce4fa00385",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\test_mock_integration.py",
+      "copy": "intersect_bridge/test_mock_integration.py",
+      "bytes": 3480,
+      "sha256": "adeba7cca1f82b66f0c721ca58074fe4cb7cfd82fe7d3c96668a918c6edc25fb",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\packaging\\RamanLauncher.spec",
+      "copy": "intersect_bridge/packaging/RamanLauncher.spec",
+      "bytes": 1100,
+      "sha256": "c704c576cd0fd971480a38728812df336af8b697f55e4d99fd943bdde03c643d",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\tests\\CMakeLists.txt",
+      "copy": "tests/CMakeLists.txt",
+      "bytes": 1428,
+      "sha256": "7669a605128cfb9d400cf903947efc215e63d5f97f119a8370d69bf15db6b18d",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\tests\\export_legacy_scan.ps1",
+      "copy": "tests/export_legacy_scan.ps1",
+      "bytes": 2436,
+      "sha256": "adfd23bcf9b85a1db0140f6d778e37a4ef18377c891bcc09c75503ba3d9e594f",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\tests\\handshake_tests.cpp",
+      "copy": "tests/handshake_tests.cpp",
+      "bytes": 15938,
+      "sha256": "9d518716b62a7a3427fe50e23ed1babb174aa4d27d0fc4bb1cbd36f698acfb71",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\tests\\merge_scan_txt.ps1",
+      "copy": "tests/merge_scan_txt.ps1",
+      "bytes": 1254,
+      "sha256": "563a85f4b5fdd7dcdc94a10910e53ee2a8da54df7d672a30ecae0f99671ce6f6",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\tests\\mock_backend.cpp",
+      "copy": "tests/mock_backend.cpp",
+      "bytes": 3105,
+      "sha256": "524a46f4b79041f99a4ad978c856ffe48782fcc836f1df71327fc34c2e12b332",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\tests\\mock_motor.cpp",
+      "copy": "tests/mock_motor.cpp",
+      "bytes": 1276,
+      "sha256": "4e5d54da5138b1ad7a4efcfef58294da20b71421568c5bdb83ccac62f1f0ad12",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\tests\\motor_path_test.cpp",
+      "copy": "tests/motor_path_test.cpp",
+      "bytes": 2166,
+      "sha256": "8d8ccf43fcf5557487b064e56165c49fe2c1b46ddbe60baa3acb085dae836244",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\tests\\motor_sdk_stub.h",
+      "copy": "tests/motor_sdk_stub.h",
+      "bytes": 1906,
+      "sha256": "fc745be32115a4682026dc207e2c260ac6139d5bc2c2246ca9043b63b764d875",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\tests\\serialization_cli_test.cpp",
+      "copy": "tests/serialization_cli_test.cpp",
+      "bytes": 1628,
+      "sha256": "4c8fcf7c540ff712c9a60512b24762d88433d41c1d122a2f8e2c8c98690a9e6b",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\tests\\VERIFICATION.md",
+      "copy": "tests/VERIFICATION.md",
+      "bytes": 5430,
+      "sha256": "64da385dd3351ecd2bc4c40c07e34d8677678e1d812aa7ec21c2c5255db4e8e2",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\motor\\CMakeLists.txt",
+      "copy": "hardware/motor/CMakeLists.txt",
+      "bytes": 649,
+      "sha256": "21e92cbd45863765feaa2d1880ea7a9e9a04e4a2d27bb1738967b10f6481141b",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\motor\\line_scan_plan.h",
+      "copy": "hardware/motor/line_scan_plan.h",
+      "bytes": 553,
+      "sha256": "5812e3f37819e2d044077be8aaa43ade5e6927fa9acb986b3895a801e797ae42",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\motor\\RamanAutofocusTest.cpp",
+      "copy": "hardware/motor/RamanAutofocusTest.cpp",
+      "bytes": 35597,
+      "sha256": "705f8f433c3b8a8bd00a75c995dc20d8d092091b5d52fbe410923fe71c131f34",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\motor\\scan_handshake.h",
+      "copy": "hardware/motor/scan_handshake.h",
+      "bytes": 2073,
+      "sha256": "4b53b5224ae02c84587c6d10c1ab276497ef0bdbc86951ddf8f0336e805aa8cb",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\app.config",
+      "copy": "hardware/SampleApl/app.config",
+      "bytes": 262,
+      "sha256": "2383ace415c15de69db1dd8d8c4a1c7e32084e552ecd1e8d646422bf247e412d",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\app.ico",
+      "copy": "hardware/SampleApl/app.ico",
+      "bytes": 11001,
+      "sha256": "6b8d45c21e5178960fa1e79352294a646975986ab0ff0a98938485f5c1c584ca",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\app.rc",
+      "copy": "hardware/SampleApl/app.rc",
+      "bytes": 4570,
+      "sha256": "0fb7de12295b40d539d38a8b2b1faf67389b7ad215d5166b584d18d4d38d5ea9",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\AssemblyInfo.cpp",
+      "copy": "hardware/SampleApl/AssemblyInfo.cpp",
+      "bytes": 1290,
+      "sha256": "e9f72b3a780095007d43cc94b46e2d942ccc11197fefef04acf71071980bbad5",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\capture_timing.h",
+      "copy": "hardware/SampleApl/capture_timing.h",
+      "bytes": 1554,
+      "sha256": "89daa587b63efbf1dde5d5a686a0d75ef15513ece1aed480c283f62b10ab20b8",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\DataCapture.cpp",
+      "copy": "hardware/SampleApl/DataCapture.cpp",
+      "bytes": 1676,
+      "sha256": "16f31cdf494715de25e2b1f6d7566c31a763f33aaedd16b510f050fbd1088661",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\DataCapture.h",
+      "copy": "hardware/SampleApl/DataCapture.h",
+      "bytes": 606,
+      "sha256": "14bbe48808c317beb03810bb6968f9fa9d2d41d19c20a2c3bc7070f33e46f9ce",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\DataSaver.cpp",
+      "copy": "hardware/SampleApl/DataSaver.cpp",
+      "bytes": 1094,
+      "sha256": "c9654d098a12ced0e0e600a8dfc1168f55cc8d4d634ecf22b9fefbb3fd63159f",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\DataSaver.h",
+      "copy": "hardware/SampleApl/DataSaver.h",
+      "bytes": 351,
+      "sha256": "a2f03dff9561610f352f2f54376fb19f7199d341e940865e32718b40d570c1e2",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\GlobalData.cpp",
+      "copy": "hardware/SampleApl/GlobalData.cpp",
+      "bytes": 87,
+      "sha256": "15720269c1a45ee0ed8a0b4b25d975576bc4cb43631183d33f269527201a1a16",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\GlobalData.h",
+      "copy": "hardware/SampleApl/GlobalData.h",
+      "bytes": 847,
+      "sha256": "163fc8e3500c1d4aca5a05584789c7a14023b6d24539875e0b30c7817af93522",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\resource.h",
+      "copy": "hardware/SampleApl/resource.h",
+      "bytes": 91,
+      "sha256": "5e9baf9b51080e135f3433396b1359d5a8971406b40f14d6e345bdeacecc1e35",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\SampleApl.cpp",
+      "copy": "hardware/SampleApl/SampleApl.cpp",
+      "bytes": 76632,
+      "sha256": "c6e9ab0f84a7fa125c6097e45639a465917051bf3c4b4e2eebbad4f568bdd3ee",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\SampleApl.vcxproj",
+      "copy": "hardware/SampleApl/SampleApl.vcxproj",
+      "bytes": 5437,
+      "sha256": "daeb764897b4d07d1232256b055ce64be51ea396c62895e0f2d9d52dfddc0419",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\stdafx.cpp",
+      "copy": "hardware/SampleApl/stdafx.cpp",
+      "bytes": 206,
+      "sha256": "c82c2236f5b85213d3881125efebb7a26404f591cd4ece07724ffb68afe71fc2",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\SampleApl\\stdafx.h",
+      "copy": "hardware/SampleApl/stdafx.h",
+      "bytes": 275,
+      "sha256": "e84c39e1828ded2a5ef61c016679435c67634c45a8d8ae903b2e1f4f554f148a",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\DLL\\wrrusb2a.dll",
+      "copy": "hardware/DLL/wrrusb2a.dll",
+      "bytes": 92160,
+      "sha256": "9f76fe6ff2d8feea1f695bf5277068ac497332783331db29be00175d108e2a89",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\dlls\\Thorlabs.MotionControl.DeviceManager.dll",
+      "copy": "hardware/dlls/Thorlabs.MotionControl.DeviceManager.dll",
+      "bytes": 3245072,
+      "sha256": "fad719358be53e98f71ffa40940bcd3676aeb8152ca30e09b6bb7d62d5e049a7",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\dlls\\Thorlabs.MotionControl.KCube.DCServo.dll",
+      "copy": "hardware/dlls/Thorlabs.MotionControl.KCube.DCServo.dll",
+      "bytes": 439312,
+      "sha256": "c608fcb8476e4ab6b91bb1c9e62efd1a47d23beee5eeb0393c4a83fa4e9ed194",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\dlls\\Thorlabs.MotionControl.KCube.DCServo.h",
+      "copy": "hardware/dlls/Thorlabs.MotionControl.KCube.DCServo.h",
+      "bytes": 166825,
+      "sha256": "dbdd04f706771a0ab551e23709a79a527612170b6f5dfb40c6cd81b088c1b15d",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\dlls\\Thorlabs.MotionControl.KCube.DCServo.lib",
+      "copy": "hardware/dlls/Thorlabs.MotionControl.KCube.DCServo.lib",
+      "bytes": 558730,
+      "sha256": "4c90716f96dd266cc99b30d071ff369b9aeedf8300f3463c6ce2276e8dcf18d0",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\dlls\\ThorLabs.MotionControl.KCube.DCServoCLI.dll",
+      "copy": "hardware/dlls/ThorLabs.MotionControl.KCube.DCServoCLI.dll",
+      "bytes": 139792,
+      "sha256": "38d5afa8f6152ce8694e203681693884e759516b4a82a9b5f270b84e95d9ad73",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\hardware\\dlls\\Thorlabs.MotionControl.KCube.DCServoUI.dll",
+      "copy": "hardware/dlls/Thorlabs.MotionControl.KCube.DCServoUI.dll",
+      "bytes": 520720,
+      "sha256": "31380358e69dbd2ea7cb8fd46697aca96c7075610b6854f09c1307d8595a8274",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\CMakeLists.txt",
+      "copy": "physical_device/RamanAutofocus/CMakeLists.txt",
+      "bytes": 569,
+      "sha256": "28eea1f5e4b853fed9278962ca66aa93d27283570c990efe76aa73b2f424f0e1",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\RamanAutofocus\\CMakeLists.txt",
+      "copy": "physical_device/RamanAutofocus/RamanAutofocus/CMakeLists.txt",
+      "bytes": 2233,
+      "sha256": "50e2847c7cc322e638f575e4a61737a37f730d19d21c466a3c2a65e7969d70fa",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\RamanAutofocus\\laser_open.cpp",
+      "copy": "physical_device/RamanAutofocus/RamanAutofocus/laser_open.cpp",
+      "bytes": 4530,
+      "sha256": "154220bdc7be20056410849598fe15281fd4a52341179ba9c0d9c563a8c3bd11",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\RamanAutofocus\\libtest.cpp",
+      "copy": "physical_device/RamanAutofocus/RamanAutofocus/libtest.cpp",
+      "bytes": 1151,
+      "sha256": "0933eb58c92094135112ac6ac2674c27d4106839372e9686fe5ab3fda9ba7757",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\RamanAutofocus\\line_scan_plan.h",
+      "copy": "physical_device/RamanAutofocus/RamanAutofocus/line_scan_plan.h",
+      "bytes": 553,
+      "sha256": "5812e3f37819e2d044077be8aaa43ade5e6927fa9acb986b3895a801e797ae42",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\RamanAutofocus\\MotorControl.cpp",
+      "copy": "physical_device/RamanAutofocus/RamanAutofocus/MotorControl.cpp",
+      "bytes": 7008,
+      "sha256": "f85b50d4e5a91f12ae28085d7a4b809ab45ed2e84ffeb738f1d14a93e9abed54",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\RamanAutofocus\\MotorControl.h",
+      "copy": "physical_device/RamanAutofocus/RamanAutofocus/MotorControl.h",
+      "bytes": 2937,
+      "sha256": "282df824be3b496cc88e45cec24e1a1e1ccef3396af1e41f0b1cee2a798d5c5f",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\RamanAutofocus\\RamanAutofocus.cpp",
+      "copy": "physical_device/RamanAutofocus/RamanAutofocus/RamanAutofocus.cpp",
+      "bytes": 2922,
+      "sha256": "8b6198c890144bcbf4306dcc09290db05ef4c11c7ed657a575c3b25442fcac8e",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\RamanAutofocus\\RamanAutofocus.h",
+      "copy": "physical_device/RamanAutofocus/RamanAutofocus/RamanAutofocus.h",
+      "bytes": 1054,
+      "sha256": "ab262a4b807e2b83e9404b1a209e120e1afd44dbfe3d809cdafd9f798577e0ba",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\RamanAutofocus\\RamanAutofocusTest.cpp",
+      "copy": "physical_device/RamanAutofocus/RamanAutofocus/RamanAutofocusTest.cpp",
+      "bytes": 34920,
+      "sha256": "b066c59d3bab3f05f772eb63c1b48003d0fff9a5ff8ce75109af9403abb1ce90",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\RamanAutofocus\\scan_handshake.h",
+      "copy": "physical_device/RamanAutofocus/RamanAutofocus/scan_handshake.h",
+      "bytes": 2073,
+      "sha256": "4b53b5224ae02c84587c6d10c1ab276497ef0bdbc86951ddf8f0336e805aa8cb",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\RamanAutofocus\\test.cpp",
+      "copy": "physical_device/RamanAutofocus/RamanAutofocus/test.cpp",
+      "bytes": 19956,
+      "sha256": "88d20da18db3d329817c0cbd54ec828a17b80c16bc2c11f3ad8238638524d42d",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\dlls\\Thorlabs.MotionControl.DeviceManager.dll",
+      "copy": "physical_device/RamanAutofocus/dlls/Thorlabs.MotionControl.DeviceManager.dll",
+      "bytes": 3245072,
+      "sha256": "fad719358be53e98f71ffa40940bcd3676aeb8152ca30e09b6bb7d62d5e049a7",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\dlls\\Thorlabs.MotionControl.KCube.DCServo.dll",
+      "copy": "physical_device/RamanAutofocus/dlls/Thorlabs.MotionControl.KCube.DCServo.dll",
+      "bytes": 439312,
+      "sha256": "c608fcb8476e4ab6b91bb1c9e62efd1a47d23beee5eeb0393c4a83fa4e9ed194",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\dlls\\Thorlabs.MotionControl.KCube.DCServo.h",
+      "copy": "physical_device/RamanAutofocus/dlls/Thorlabs.MotionControl.KCube.DCServo.h",
+      "bytes": 166825,
+      "sha256": "dbdd04f706771a0ab551e23709a79a527612170b6f5dfb40c6cd81b088c1b15d",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\dlls\\Thorlabs.MotionControl.KCube.DCServo.lib",
+      "copy": "physical_device/RamanAutofocus/dlls/Thorlabs.MotionControl.KCube.DCServo.lib",
+      "bytes": 558730,
+      "sha256": "4c90716f96dd266cc99b30d071ff369b9aeedf8300f3463c6ce2276e8dcf18d0",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\dlls\\ThorLabs.MotionControl.KCube.DCServoCLI.dll",
+      "copy": "physical_device/RamanAutofocus/dlls/ThorLabs.MotionControl.KCube.DCServoCLI.dll",
+      "bytes": 139792,
+      "sha256": "38d5afa8f6152ce8694e203681693884e759516b4a82a9b5f270b84e95d9ad73",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\dlls\\Thorlabs.MotionControl.KCube.DCServoUI.dll",
+      "copy": "physical_device/RamanAutofocus/dlls/Thorlabs.MotionControl.KCube.DCServoUI.dll",
+      "bytes": 520720,
+      "sha256": "31380358e69dbd2ea7cb8fd46697aca96c7075610b6854f09c1307d8595a8274",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\cnn_1.py",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/cnn_1.py",
+      "bytes": 25998,
+      "sha256": "d446e6e26bf155fa7ef31c109a8beb17a6f587c81cf30cee1f693842f292fae2",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\transformer_1.py",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/transformer_1.py",
+      "bytes": 41854,
+      "sha256": "659b0588494c61836d25eb101984c62844daa4978362d12a255cfd6792275019",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\best_raman_1dcnn.pth",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/best_raman_1dcnn.pth",
+      "bytes": 1702221,
+      "sha256": "bd55359e1637d9a3e532c060768bf0db96430f85181712df351ce17783df8942",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\class_names.json",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/class_names.json",
+      "bytes": 43,
+      "sha256": "d279c1c74e752982ea26d4c30a9e6e7ce5f5c9dca987899556ec4a0ab1ce30b5",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\model_meta.json",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/model_meta.json",
+      "bytes": 32,
+      "sha256": "9c12695714bebc1831cc190275c70dffd9654f3871e8c395f52d7019399515bc",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\_PCA_SVM_r6g20260922_results\\meta.json",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/_PCA_SVM_r6g20260922_results/meta.json",
+      "bytes": 906,
+      "sha256": "045d02d4cc690e1df8e5573bf721978fde9dd75313d06a765e7f4e04dce5152d",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\_PCA_SVM_r6g20260922_results\\mix_pca_raw.joblib",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/_PCA_SVM_r6g20260922_results/mix_pca_raw.joblib",
+      "bytes": 165642,
+      "sha256": "3d89ea11a31c77a074b620b2743478603c415094fdbb7b54abea7d1d5e032cf8",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\_PCA_SVM_r6g20260922_results\\mix_scaler_raw.joblib",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/_PCA_SVM_r6g20260922_results/mix_scaler_raw.joblib",
+      "bytes": 47575,
+      "sha256": "25de0a97986c4de7b1e6415475905da62b79eec630390dab9454d60b36ca50a8",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\_PCA_SVM_r6g20260922_results\\ovr_scaler_raw.joblib",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/_PCA_SVM_r6g20260922_results/ovr_scaler_raw.joblib",
+      "bytes": 1935,
+      "sha256": "c35c2d5cb0c8f66696f657b6d21ef913bdca88e78bab32b791d02bc270c465c6",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\_PCA_SVM_r6g20260922_results\\ovr_svms_raw.joblib",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/_PCA_SVM_r6g20260922_results/ovr_svms_raw.joblib",
+      "bytes": 269589,
+      "sha256": "b9e3c04ea0c07c1162155c6ea6f5ed85d4b984a7ab08e685e059cf6328bb5e75",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\_PCA_SVM_r6g20260922_results\\pure_pca_minmax.joblib",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/_PCA_SVM_r6g20260922_results/pure_pca_minmax.joblib",
+      "bytes": 165642,
+      "sha256": "a5b92244422515f2d95b9c14b8394b5af8e9196aff334a631e79e64745c16125",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\_PCA_SVM_r6g20260922_results\\pure_scaler_minmax.joblib",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/_PCA_SVM_r6g20260922_results/pure_scaler_minmax.joblib",
+      "bytes": 47575,
+      "sha256": "7d3103cd477dc77cb86c2acc74b81d2bf593ba28a4b9bdffb337819c79a14272",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\_PCA_SVM_r6g20260922_results\\pure_svm_minmax.joblib",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/_PCA_SVM_r6g20260922_results/pure_svm_minmax.joblib",
+      "bytes": 30111,
+      "sha256": "31b8a9ebab86706c365d548568064151716a4df6b2aa206739f95463ffd9bbab",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\pure_only_20260923\\CNN3_1_pure_only.py",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/pure_only_20260923/CNN3_1_pure_only.py",
+      "bytes": 40201,
+      "sha256": "677f9c85f8f778c8300162b5efc6df7f6bce681d2dcff98e66b5fe126bb9f0f5",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\pure_only_20260923\\Transformer5_1_pure_only.py",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/pure_only_20260923/Transformer5_1_pure_only.py",
+      "bytes": 42225,
+      "sha256": "a974dfa2ff1a4a7e72a97b869833f0248f08c67804b70bbcc1b89458bdf6c351",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\model_replacements_20260921\\CNN3_1_component_summary_complete.py",
+      "copy": "model_replacements_20260921/CNN3_1_component_summary_complete.py",
+      "bytes": 38189,
+      "sha256": "2992685fbc4b15bd776050858f664d822e21cca0babf2520009ee201544dec54",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\model_replacements_20260921\\CNN3_1_pointwise_complete.py",
+      "copy": "model_replacements_20260921/CNN3_1_pointwise_complete.py",
+      "bytes": 36438,
+      "sha256": "a3e47a51376ca8fd92bdcb37382530f7d55f845f738a5f70781cc22a2d4375b2",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\model_replacements_20260921\\SVM4_component_summary_complete.py",
+      "copy": "model_replacements_20260921/SVM4_component_summary_complete.py",
+      "bytes": 50803,
+      "sha256": "50e71680e68e50551ee2418f1b807b4d2a9da7d4e66a58f846e2901ce8beb791",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\model_replacements_20260921\\SVM4_pointwise_complete.py",
+      "copy": "model_replacements_20260921/SVM4_pointwise_complete.py",
+      "bytes": 45050,
+      "sha256": "804149410738b6e53e5ba36c83f08275546b52f9ebe05518ba3f05d291fdab2f",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\model_replacements_20260921\\Transformer5_1_component_summary_complete.py",
+      "copy": "model_replacements_20260921/Transformer5_1_component_summary_complete.py",
+      "bytes": 40154,
+      "sha256": "28ae16029403abf3261473ef714aa1c565a255bf6ebba0f71b36a5aa239257da",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\model_replacements_20260921\\Transformer5_1_pointwise_complete.py",
+      "copy": "model_replacements_20260921/Transformer5_1_pointwise_complete.py",
+      "bytes": 38493,
+      "sha256": "51461caec4bf6cb1d4258d2d0424fa975e04dec31a18fca2d084c3e7ee5367f8",
+      "public_candidate": true
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\intersect_bridge\\build_qt\\bin\\raman_intersect.exe",
+      "copy": "intersect_bridge/build_qt/bin/raman_intersect.exe",
+      "bytes": 178176,
+      "sha256": "92c4b40a94fddd467428b0510cab1059056af423995f92fc8a78e059945d454b",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\handshake_v2\\backend\\SampleApl.exe",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/handshake_v2/backend/SampleApl.exe",
+      "bytes": 187392,
+      "sha256": "0bf0c6a65536053bf9f63de0aac247ed608d1b8a1f1f0f89d9aaaf3a9cce528a",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\handshake_v2\\backend\\wrrusb2a.dll",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/handshake_v2/backend/wrrusb2a.dll",
+      "bytes": 92160,
+      "sha256": "9f76fe6ff2d8feea1f695bf5277068ac497332783331db29be00175d108e2a89",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\handshake_v2\\motor\\RamanAutofocus.exe",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/handshake_v2/motor/RamanAutofocus.exe",
+      "bytes": 222720,
+      "sha256": "0be2ab5b636e5149f0f635d3ad13c3f451d050898cf49762ab5831c0e39381d5",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\handshake_v2\\motor\\Thorlabs.MotionControl.DeviceManager.dll",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/handshake_v2/motor/Thorlabs.MotionControl.DeviceManager.dll",
+      "bytes": 3245072,
+      "sha256": "fad719358be53e98f71ffa40940bcd3676aeb8152ca30e09b6bb7d62d5e049a7",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\OneDrive\\Documents\\laser_test\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\handshake_v2\\motor\\Thorlabs.MotionControl.KCube.DCServo.dll",
+      "copy": "build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/handshake_v2/motor/Thorlabs.MotionControl.KCube.DCServo.dll",
+      "bytes": 439312,
+      "sha256": "c608fcb8476e4ab6b91bb1c9e62efd1a47d23beee5eeb0393c4a83fa4e9ed194",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\RamanAutofocus\\KDC101Test.exe",
+      "copy": "physical_device/RamanAutofocus/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/RamanAutofocus/KDC101Test.exe",
+      "bytes": 236032,
+      "sha256": "00863e2b00abe43b502ed2089cea7fa2c5964bc95886b3af01459abdc4d4d108",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\RamanAutofocus\\LibTest.exe",
+      "copy": "physical_device/RamanAutofocus/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/RamanAutofocus/LibTest.exe",
+      "bytes": 105984,
+      "sha256": "1c0f620a458641a33d4cc32d706eccfe27bd1c0feacd607c301ad8eac414baef",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\RamanAutofocus\\RamanAutofocus.exe",
+      "copy": "physical_device/RamanAutofocus/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/RamanAutofocus/RamanAutofocus.exe",
+      "bytes": 267776,
+      "sha256": "571d2b5d3e84b8da786ab48a24d40a9a911ec81ee5021ab7505537fbd86ebed7",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\RamanAutofocus\\Thorlabs.MotionControl.DeviceManager.dll",
+      "copy": "physical_device/RamanAutofocus/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/RamanAutofocus/Thorlabs.MotionControl.DeviceManager.dll",
+      "bytes": 3245072,
+      "sha256": "8113968eb17b471467678a3e8e58c57e1ab3b1200f4d25d72702aacae2e47c3c",
+      "public_candidate": false
+    },
+    {
+      "source": "C:\\Users\\Jeremy666\\Downloads\\portableRamanSpec_Software (1)\\RamanAutofocus\\build\\Desktop_Qt_6_6_3_MSVC2019_64bit-Debug\\RamanAutofocus\\Thorlabs.MotionControl.KCube.DCServo.dll",
+      "copy": "physical_device/RamanAutofocus/build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/RamanAutofocus/Thorlabs.MotionControl.KCube.DCServo.dll",
+      "bytes": 439312,
+      "sha256": "9a96202a2bdb42470ec9a805f8e0d50987265dbb00273d9979a466a95f549e08",
+      "public_candidate": false
+    }
+  ]
+}

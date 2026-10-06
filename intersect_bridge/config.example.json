@@ -1,0 +1,23 @@
+{
+  "ipc_dir": "build_qt/bin/ipc",
+  "scan_root": "build_qt/bin/scan_sessions",
+  "model_dir": "../build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/_PCA_SVM_r6g20260922_results",
+  "dark_file": "../build/Desktop_Qt_6_6_3_MSVC2019_64bit-Debug/dark_measurements/dark_20260921_153016_700.txt",
+  "results_dir": "runtime/results",
+  "intersect": {
+    "hierarchy": {
+      "organization": "raman-lab",
+      "facility": "local",
+      "system": "portable-raman",
+      "subsystem": "instrument",
+      "service": "bridge"
+    },
+    "brokers": [{
+      "host": "127.0.0.1",
+      "port": 1883,
+      "protocol": "mqtt5.0",
+      "username": "raman",
+      "password": "CHANGE_ME"
+    }]
+  }
+}

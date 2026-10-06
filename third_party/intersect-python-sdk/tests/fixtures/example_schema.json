@@ -1,0 +1,1406 @@
+{
+  "asyncapi": "2.6.0",
+  "x-intersect-version": "0.9.6",
+  "info": {
+    "title": "test.test.test.test.test",
+    "description": "INTERSECT schema",
+    "version": "0.0.0"
+  },
+  "defaultContentType": "application/json",
+  "capabilities": {
+    "intersect_sdk": {
+      "endpoints": {},
+      "events": {},
+      "status": {
+        "$ref": "#/components/schemas/IntersectCoreStatus"
+      },
+      "description": "Core capability present in every INTERSECT Service.\n\nThis may be called explicitly by any Client interacting with any SDK service. Set the operation to be \"intersect_sdk.<ENDPOINT>\"."
+    },
+    "DummyCapability": {
+      "endpoints": {
+        "annotated_set": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "items": {
+                  "exclusiveMinimum": 0,
+                  "type": "integer"
+                },
+                "minItems": 1,
+                "type": "array",
+                "uniqueItems": true,
+                "title": "annotated_set"
+              }
+            },
+            "description": "return numbers in set which are prime numbers in the range 1-100"
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "items": {
+                  "exclusiveMinimum": 0,
+                  "type": "integer"
+                },
+                "minItems": 1,
+                "type": "array",
+                "uniqueItems": true,
+                "title": "positive_int_set"
+              }
+            },
+            "description": "return numbers in set which are prime numbers in the range 1-100"
+          }
+        },
+        "binary_to_binary": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "image/png",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "format": "binary",
+                "type": "string",
+                "title": "binary_to_binary",
+                "contentMediaType": "image/png"
+              }
+            }
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "image/png",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "format": "binary",
+                "maxLength": 1048576,
+                "type": "string",
+                "title": "binary_to_binary",
+                "contentMediaType": "image/png"
+              }
+            }
+          }
+        },
+        "calculate_3n_plus_1": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array",
+                "title": "calculate_3n_plus_1"
+              }
+            },
+            "description": "Calculates the famous \"3n + 1\" problem. Takes in an integer, outputs an array of numbers\nwhich follow the algorithm all the way to \"1\"."
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "maximum": 1000000,
+                "minimum": 1,
+                "type": "integer",
+                "title": "token"
+              }
+            },
+            "description": "Calculates the famous \"3n + 1\" problem. Takes in an integer, outputs an array of numbers\nwhich follow the algorithm all the way to \"1\"."
+          }
+        },
+        "calculate_fibonacci": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array",
+                "title": "calculate_fibonacci"
+              }
+            },
+            "description": "calculates all fibonacci numbers between two numbers\n\ni.e. start = 4, end = 6:\nresponse = [5, 8, 13]"
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "maxItems": 2,
+                "minItems": 2,
+                "prefixItems": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "type": "array",
+                "title": "request"
+              }
+            },
+            "description": "calculates all fibonacci numbers between two numbers\n\ni.e. start = 4, end = 6:\nresponse = [5, 8, 13]"
+          }
+        },
+        "check_union_discriminator": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "string",
+                "title": "check_union_discriminator"
+              }
+            }
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "description": "example with discriminator",
+                "discriminator": {
+                  "mapping": {
+                    "one": "#/components/schemas/UnionClass1",
+                    "two": "#/components/schemas/UnionClass2"
+                  },
+                  "propertyName": "name"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/UnionClass1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/UnionClass2"
+                  }
+                ],
+                "title": "param"
+              }
+            }
+          }
+        },
+        "check_union_no_discriminator": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "string",
+                "title": "check_union_no_discriminator"
+              }
+            }
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/UnionClass1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/UnionClass2"
+                  }
+                ],
+                "description": "example without discriminator",
+                "title": "param"
+              }
+            }
+          }
+        },
+        "divide_by_zero_exceptions": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "number",
+                "title": "divide_by_zero_exceptions"
+              }
+            }
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "integer",
+                "title": "param"
+              }
+            }
+          }
+        },
+        "get_url_parts": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object",
+                "title": "get_url_parts"
+              }
+            },
+            "description": "example of automatic URL parsing and schema validation\n\n(the return type should realistically be a TypedDict, not a dict)"
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "format": "uri",
+                "minLength": 1,
+                "type": "string",
+                "title": "url"
+              }
+            },
+            "description": "example of automatic URL parsing and schema validation\n\n(the return type should realistically be a TypedDict, not a dict)"
+          }
+        },
+        "ip4_to_ip6": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "format": "ipv6",
+                "type": "string",
+                "title": "ip4_to_ip6"
+              }
+            },
+            "description": "example of IPaddress conversion\nreturn value will always start with '2002::' based on implementation\n\nPydantic also supports IP networks and interfaces, in addition to addresses"
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "format": "ipv4",
+                "type": "string",
+                "title": "ip4"
+              }
+            },
+            "description": "example of IPaddress conversion\nreturn value will always start with '2002::' based on implementation\n\nPydantic also supports IP networks and interfaces, in addition to addresses"
+          }
+        },
+        "primitive_event_message": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "string",
+                "title": "primitive_event_message"
+              }
+            }
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "default": 1,
+                "minimum": 1,
+                "type": "integer",
+                "title": "emit_times"
+              }
+            }
+          }
+        },
+        "primitive_event_message_random": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "string",
+                "title": "primitive_event_message_random"
+              }
+            }
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              }
+            }
+          }
+        },
+        "raise_exception_no_param": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "string",
+                "title": "raise_exception_no_param"
+              }
+            }
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              }
+            }
+          }
+        },
+        "search_for_lucky_string_in_json": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "boolean",
+                "title": "search_for_lucky_string_in_json"
+              }
+            },
+            "description": "return true if our lucky string is in JSON, false otherwise"
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "$ref": "#/components/schemas/Json"
+              }
+            },
+            "description": "return true if our lucky string is in JSON, false otherwise"
+          }
+        },
+        "test_datetime": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "string",
+                "title": "test_datetime"
+              }
+            },
+            "description": "NOTE: If strict mode is ON, only JSON strings can be coerced into datetimes.\nIf strict mode is OFF, integers can also be coerced into datetimes."
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "format": "date-time",
+                "type": "string",
+                "title": "request"
+              }
+            },
+            "description": "NOTE: If strict mode is ON, only JSON strings can be coerced into datetimes.\nIf strict mode is OFF, integers can also be coerced into datetimes."
+          }
+        },
+        "test_decimal": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string",
+                "title": "test_decimal"
+              }
+            },
+            "description": "take in decimal input\nreturn decimal divided by PI (20 precision digits)"
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                    "type": "string"
+                  }
+                ],
+                "title": "input_value"
+              }
+            },
+            "description": "take in decimal input\nreturn decimal divided by PI (20 precision digits)"
+          }
+        },
+        "test_dicts": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "additionalProperties": {
+                  "type": "integer"
+                },
+                "type": "object",
+                "title": "test_dicts"
+              }
+            },
+            "description": "NOTE: JSON always stores Dict/Mapping keys as strings.\nIf the string can't be coerced into the input value, it will throw a RUNTIME error."
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "additionalProperties": {
+                  "type": "integer"
+                },
+                "type": "object",
+                "title": "request"
+              }
+            },
+            "description": "NOTE: JSON always stores Dict/Mapping keys as strings.\nIf the string can't be coerced into the input value, it will throw a RUNTIME error."
+          }
+        },
+        "test_enum": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "string",
+                "title": "test_enum"
+              }
+            },
+            "description": "Returns either 'first' or 'later' depending on the enum value."
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "$ref": "#/components/schemas/SampleEnum"
+              }
+            },
+            "description": "Returns either 'first' or 'later' depending on the enum value."
+          }
+        },
+        "test_generator": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array",
+                "title": "test_generator"
+              }
+            },
+            "description": "TODO - Generators need more support than this.\n\nThis tests returning a generator function, which may be useful for streaming data.\nIn this example, yield all substring hashes of the request string.\n\nA couple of notes about the Generator type:\n  1) Given the typing is Generator[yield_type, send_type, return_type], only the yield_type matters\n  2) The schema will always look like \"{'items': {'type': <YIELD_TYPE>}, 'type': 'array'}\""
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "string",
+                "title": "request"
+              }
+            },
+            "description": "TODO - Generators need more support than this.\n\nThis tests returning a generator function, which may be useful for streaming data.\nIn this example, yield all substring hashes of the request string.\n\nA couple of notes about the Generator type:\n  1) Given the typing is Generator[yield_type, send_type, return_type], only the yield_type matters\n  2) The schema will always look like \"{'items': {'type': <YIELD_TYPE>}, 'type': 'array'}\""
+          }
+        },
+        "test_path": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "test_path"
+              }
+            },
+            "description": "Paths are valid parameters, but you'll often want to further sanitize input to block certain inputs (i.e. \"..\").\n\nThe example regex would work for allowing inputs from a file which always has a file extension and does not allow backwards traversal from the root.\nIt only allows for relative paths and filenames only.\n\nIt's ideal to try to capture this in a regex so that the schema can represent validation 100%; this helps out clients.\nHowever, if you're unable to, it's not required to express everything through schema; you are always free to implement your\nown validation template.\n\nUsing \"Path\" as the request type adds a `\"format\": \"path\"` attribute to the schema and automatically serializes to Pathlib, assuming you want to use the\nPathlib API.\n\nRETURNS - the type of the file based on its URL, or null if it can't guess."
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "format": "path",
+                "type": "string",
+                "title": "path"
+              }
+            },
+            "description": "Paths are valid parameters, but you'll often want to further sanitize input to block certain inputs (i.e. \"..\").\n\nThe example regex would work for allowing inputs from a file which always has a file extension and does not allow backwards traversal from the root.\nIt only allows for relative paths and filenames only.\n\nIt's ideal to try to capture this in a regex so that the schema can represent validation 100%; this helps out clients.\nHowever, if you're unable to, it's not required to express everything through schema; you are always free to implement your\nown validation template.\n\nUsing \"Path\" as the request type adds a `\"format\": \"path\"` attribute to the schema and automatically serializes to Pathlib, assuming you want to use the\nPathlib API.\n\nRETURNS - the type of the file based on its URL, or null if it can't guess."
+          }
+        },
+        "test_special_python_types": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "$ref": "#/components/schemas/MyNamedTuple"
+              }
+            }
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "$ref": "#/components/schemas/MyTypedDict"
+              }
+            }
+          }
+        },
+        "test_uuid": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "string",
+                "title": "test_uuid"
+              }
+            },
+            "description": "Get the 13th digit of a UUID to determine UUID VERSION"
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "format": "uuid",
+                "type": "string",
+                "title": "uid"
+              }
+            },
+            "description": "Get the 13th digit of a UUID to determine UUID VERSION"
+          }
+        },
+        "union_message_with_events": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "title": "union_message_with_events"
+              }
+            }
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "enum": [
+                  "str",
+                  "int"
+                ],
+                "type": "string",
+                "title": "param"
+              }
+            }
+          }
+        },
+        "union_response": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    },
+                    "type": "object"
+                  }
+                ],
+                "title": "union_response"
+              }
+            },
+            "description": "Spit out a random string, integer, boolean, or object response"
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              }
+            },
+            "description": "Spit out a random string, integer, boolean, or object response"
+          }
+        },
+        "valid_default_argument": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "type": "integer",
+                "title": "valid_default_argument"
+              }
+            },
+            "description": "verifies that you can call a function with a default parameter"
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "default": 4,
+                "type": "integer",
+                "title": "param"
+              }
+            },
+            "description": "verifies that you can call a function with a default parameter"
+          }
+        },
+        "verify_float_dict": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "patternProperties": {
+                  "^-?[0-9]+$": {
+                    "type": "string"
+                  }
+                },
+                "type": "object",
+                "title": "verify_float_dict"
+              }
+            },
+            "description": "verifies that dictionaries can have floats and integers as key types"
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "patternProperties": {
+                  "^-?[0-9]*\\.?[0-9]+([eE]-?[0-9]+)?$": {
+                    "type": "string"
+                  }
+                },
+                "type": "object",
+                "title": "param"
+              }
+            },
+            "description": "verifies that dictionaries can have floats and integers as key types"
+          }
+        },
+        "verify_nested": {
+          "publish": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "$ref": "#/components/schemas/NestedResponse"
+              }
+            },
+            "description": "verifies that nested values are parsed correctly"
+          },
+          "subscribe": {
+            "message": {
+              "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+              "contentType": "application/json",
+              "traits": {
+                "$ref": "#/components/messageTraits/commonHeaders"
+              },
+              "payload": {
+                "$ref": "#/components/schemas/Nested1"
+              }
+            },
+            "description": "verifies that nested values are parsed correctly"
+          }
+        }
+      },
+      "events": {
+        "union": {
+          "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+          "contentType": "application/json",
+          "payload": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "union"
+          },
+          "traits": {
+            "$ref": "#/components/messageTraits/commonHeaders"
+          },
+          "description": "Generic example of how to do a union event"
+        },
+        "int": {
+          "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+          "contentType": "application/json",
+          "payload": {
+            "description": "Generic integer event",
+            "type": "integer",
+            "title": "int"
+          },
+          "traits": {
+            "$ref": "#/components/messageTraits/commonHeaders"
+          }
+        },
+        "str": {
+          "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+          "contentType": "application/json",
+          "payload": {
+            "type": "string",
+            "title": "str"
+          },
+          "traits": {
+            "$ref": "#/components/messageTraits/commonHeaders"
+          },
+          "description": "Generic string event"
+        },
+        "float": {
+          "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+          "contentType": "application/json",
+          "payload": {
+            "type": "number",
+            "title": "float"
+          },
+          "traits": {
+            "$ref": "#/components/messageTraits/commonHeaders"
+          },
+          "description": "Generic float event"
+        },
+        "list_float": {
+          "schemaFormat": "application/vnd.aai.asyncapi+json;version=2.6.0",
+          "contentType": "application/json",
+          "payload": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "list_float"
+          },
+          "traits": {
+            "$ref": "#/components/messageTraits/commonHeaders"
+          },
+          "description": "generic list of floats event"
+        }
+      },
+      "status": {
+        "$ref": "#/components/schemas/DummyStatus"
+      },
+      "description": "This is an example of the overarching capability class a user creates that we want to inject into the service.\n\nWhen defining entrypoints to your capability, use the @intersect_message() annotation. Your class will need\nat least one function with this annotation. These functions REQUIRE type annotations to function properly.\nSee the @intersect_message() annotation for more information.\n\nYou can potentially extend from multiple preexisting Capabilities in this class - each Capability may have\nseveral abstract functions which would need to be implemented by the user.\n\nBeyond this, you may define your capability class however you like, including through its constructor."
+    }
+  },
+  "components": {
+    "schemas": {
+      "IntersectCoreStatus": {
+        "description": "Core status information about the INTERSECT-SDK Service as a whole.",
+        "properties": {
+          "uptime": {
+            "format": "duration",
+            "title": "Uptime",
+            "type": "string"
+          },
+          "logical_cpus": {
+            "title": "Logical CPUs",
+            "type": "integer"
+          },
+          "physical_cpus": {
+            "title": "Physical CPUs",
+            "type": "integer"
+          },
+          "cpu_percentages": {
+            "items": {
+              "type": "number"
+            },
+            "title": "CPU Percentages",
+            "type": "array"
+          },
+          "service_cpu_percentage": {
+            "title": "Service CPU Usage Percentage",
+            "type": "number"
+          },
+          "memory_total": {
+            "title": "Memory Total",
+            "type": "integer"
+          },
+          "memory_usage_percentage": {
+            "title": "Memory Usage Percentage",
+            "type": "number"
+          },
+          "service_memory_percentage": {
+            "title": "Service Memory Usage Percentage",
+            "type": "number"
+          },
+          "disk_total": {
+            "title": "Disk Total",
+            "type": "integer"
+          },
+          "disk_usage_percentage": {
+            "title": "Disk Usage Percentage",
+            "type": "number"
+          }
+        },
+        "required": [
+          "uptime",
+          "logical_cpus",
+          "physical_cpus",
+          "cpu_percentages",
+          "service_cpu_percentage",
+          "memory_total",
+          "memory_usage_percentage",
+          "service_memory_percentage",
+          "disk_total",
+          "disk_usage_percentage"
+        ],
+        "title": "IntersectCoreStatus",
+        "type": "object"
+      },
+      "UnionClass1": {
+        "properties": {
+          "name": {
+            "const": "one",
+            "default": "one",
+            "title": "Name",
+            "type": "string"
+          },
+          "scale": {
+            "default": 0,
+            "maximum": 0,
+            "minimum": 0,
+            "title": "Scale",
+            "type": "integer"
+          },
+          "loc": {
+            "title": "Loc",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc"
+        ],
+        "title": "UnionClass1",
+        "type": "object"
+      },
+      "UnionClass2": {
+        "properties": {
+          "name": {
+            "const": "two",
+            "default": "two",
+            "title": "Name",
+            "type": "string"
+          },
+          "scale": {
+            "minimum": 1,
+            "title": "Scale",
+            "type": "integer"
+          },
+          "loc": {
+            "title": "Loc",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scale",
+          "loc"
+        ],
+        "title": "UnionClass2",
+        "type": "object"
+      },
+      "Json": {
+        "anyOf": [
+          {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Json"
+            },
+            "type": "object"
+          },
+          {
+            "items": {
+              "$ref": "#/components/schemas/Json"
+            },
+            "type": "array"
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "SampleEnum": {
+        "description": "Basic Enum for testing.",
+        "enum": [
+          "ONE",
+          "TWO"
+        ],
+        "title": "SampleEnum",
+        "type": "string"
+      },
+      "MyTypedDict": {
+        "properties": {
+          "one": {
+            "title": "One",
+            "type": "integer"
+          },
+          "two": {
+            "title": "Two",
+            "type": "boolean"
+          },
+          "three": {
+            "title": "Three",
+            "type": "string"
+          }
+        },
+        "required": [
+          "one",
+          "two",
+          "three"
+        ],
+        "title": "MyTypedDict",
+        "type": "object"
+      },
+      "MyNamedTuple": {
+        "maxItems": 3,
+        "minItems": 3,
+        "prefixItems": [
+          {
+            "title": "One",
+            "type": "integer"
+          },
+          {
+            "title": "Two",
+            "type": "boolean"
+          },
+          {
+            "title": "Three",
+            "type": "string"
+          }
+        ],
+        "type": "array"
+      },
+      "Nested2": {
+        "description": "sub-nested class",
+        "properties": {
+          "variables": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Variables",
+            "type": "array",
+            "uniqueItems": true
+          },
+          "nested_json": {
+            "$ref": "#/components/schemas/Json"
+          }
+        },
+        "required": [
+          "variables",
+          "nested_json"
+        ],
+        "title": "Nested2",
+        "type": "object"
+      },
+      "Nested1": {
+        "properties": {
+          "integer": {
+            "title": "Integer",
+            "type": "integer"
+          },
+          "string": {
+            "title": "String",
+            "type": "string"
+          },
+          "nested": {
+            "$ref": "#/components/schemas/Nested2"
+          }
+        },
+        "required": [
+          "integer",
+          "string",
+          "nested"
+        ],
+        "title": "Nested1",
+        "type": "object"
+      },
+      "NestedResponse": {
+        "properties": {
+          "integer_represented": {
+            "title": "Integer Represented",
+            "type": "boolean"
+          },
+          "string_represented": {
+            "title": "String Represented",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "integer_represented",
+          "string_represented"
+        ],
+        "title": "NestedResponse",
+        "type": "object"
+      },
+      "DummyStatus": {
+        "description": "Example structure of a return type. TypedDict is the easiest to use for complex types,\nas it allows for extensive documentation.",
+        "properties": {
+          "functions_called": {
+            "description": "Every time a function is called, this value is increased by 1.",
+            "exclusiveMinimum": 0,
+            "title": "Functions Called",
+            "type": "integer"
+          },
+          "last_function_called": {
+            "title": "Last Function Called",
+            "type": "string"
+          }
+        },
+        "required": [
+          "functions_called",
+          "last_function_called"
+        ],
+        "title": "DummyStatus",
+        "type": "object"
+      }
+    },
+    "messageTraits": {
+      "commonHeaders": {
+        "userspaceHeaders": {
+          "description": "ALL request/response/command messages must contain this header.\n\nWe do not include the content type of the message in the header, it is handled separately.",
+          "properties": {
+            "message_id": {
+              "description": "Unique message ID",
+              "title": "Message Id",
+              "type": "string"
+            },
+            "campaign_id": {
+              "description": "ID associated with a campaign",
+              "title": "Campaign Id",
+              "type": "string"
+            },
+            "request_id": {
+              "description": "ID associated with a specific request message and response message sequence",
+              "title": "Request Id",
+              "type": "string"
+            },
+            "source": {
+              "description": "source of the message",
+              "pattern": "^[a-z0-9][-a-z0-9.]*[-a-z0-9]$",
+              "title": "Source",
+              "type": "string"
+            },
+            "destination": {
+              "description": "destination of the message",
+              "pattern": "^[a-z0-9][-a-z0-9.]*[-a-z0-9]$",
+              "title": "Destination",
+              "type": "string"
+            },
+            "created_at": {
+              "description": "the UTC timestamp of message creation",
+              "title": "Created At",
+              "type": "string"
+            },
+            "sdk_version": {
+              "description": "SemVer string of SDK's version, used to check for compatibility",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$",
+              "title": "Sdk Version",
+              "type": "string"
+            },
+            "operation_id": {
+              "description": "Name of capability and operation we want to call, in the format ${CAPABILITY_NAME}.${FUNCTION_NAME}",
+              "title": "Operation Id",
+              "type": "string"
+            },
+            "data_handler": {
+              "description": "Code signifying where data is stored.",
+              "type": "string"
+            },
+            "has_error": {
+              "description": "If this value is True, the payload will contain the error message (a string)",
+              "title": "Has Error",
+              "type": "string"
+            }
+          },
+          "required": [
+            "message_id",
+            "campaign_id",
+            "request_id",
+            "source",
+            "destination",
+            "created_at",
+            "sdk_version",
+            "operation_id"
+          ],
+          "title": "UserspaceMessageHeaders",
+          "type": "object"
+        },
+        "eventHeaders": {
+          "description": "ALL event messages must include this header.\n\nWe do not include the content type of the message in the header, it is handled separately.",
+          "properties": {
+            "message_id": {
+              "description": "Unique message ID",
+              "title": "Message Id",
+              "type": "string"
+            },
+            "source": {
+              "description": "source of the message",
+              "pattern": "^[a-z0-9][-a-z0-9.]*[-a-z0-9]$",
+              "title": "Source",
+              "type": "string"
+            },
+            "created_at": {
+              "description": "the UTC timestamp of message creation",
+              "title": "Created At",
+              "type": "string"
+            },
+            "sdk_version": {
+              "description": "SemVer string of SDK's version, used to check for compatibility",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$",
+              "title": "Sdk Version",
+              "type": "string"
+            },
+            "data_handler": {
+              "description": "Code signifying where data is stored.",
+              "type": "string"
+            },
+            "capability_name": {
+              "description": "The name of the capability which emitted the event originally.",
+              "pattern": "^[a-zA-Z0-9]\\w*$",
+              "title": "Capability Name",
+              "type": "string"
+            },
+            "event_name": {
+              "description": "The name of the event that was emitted, namespaced to the capability.",
+              "pattern": "^[a-zA-Z0-9]\\w*$",
+              "title": "Event Name",
+              "type": "string"
+            }
+          },
+          "required": [
+            "message_id",
+            "source",
+            "created_at",
+            "sdk_version",
+            "capability_name",
+            "event_name"
+          ],
+          "title": "EventMessageHeaders",
+          "type": "object"
+        }
+      }
+    }
+  }
+}

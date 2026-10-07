@@ -36,10 +36,6 @@ The Python service and Qt use local JSON files to communicate. They must run on 
 
 **PCA-SVM is connected to the automatic INTERSECT workflow.** CNN and Transformer scripts are also in this repository, but they are not connected to this automatic workflow yet. The CNN button in Qt is a separate local action.
 
-## Important: setup is still needed
-
-This repository keeps the original program code unchanged. It is a source copy, not a ready-to-run package for every computer.
-
 Some files still contain paths from the original computer. New users need to set up their own paths, software, and devices.
 
 The public repository does not include:
